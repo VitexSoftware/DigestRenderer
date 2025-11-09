@@ -6,43 +6,57 @@ applyTo: '**'
 # DigestRenderer Library - Copilot Instructions
 
 ## Project Overview
-DigestRenderer converts structured JSON analytics data into themed HTML output:
-- Multiple theme support (Bootstrap, Email-compatible)
-- Module-specific renderers for different data types
-- Reusable across different accounting systems
-- Clean separation between data and presentation
+DigestRenderer is the **presentation layer** that converts structured JSON analytics data into beautiful, themed HTML output:
+- **Multiple Themes**: Bootstrap (modern web), Email (client-compatible), Custom themes
+- **Module-Specific Rendering**: Smart renderers for different analytics data types  
+- **System-Agnostic**: Works with any JSON data following DigestModules format
+- **Responsive Design**: Mobile-first approach with modern CSS
+- **Email-Safe HTML**: Compatible with email clients and newsletter systems
 
-## Architecture Guidelines
-- **ThemeInterface**: All themes must implement this interface
-- **ModuleRendererInterface**: Renderers for specific module types
-- **Factory Pattern**: ModuleRendererFactory creates appropriate renderers
-- **Template System**: Themes define HTML structure and CSS
-- **Data-driven**: Accepts JSON from DigestModules library
+## 🎨 Core Architecture
+This library implements a **theme-based rendering system** where:
+- **Themes** = Complete HTML/CSS frameworks (Bootstrap, Email, Custom)
+- **Module Renderers** = Specialized HTML generators for specific data types
+- **DigestRenderer** = Main orchestrator that combines themes with data
+- **Factory Pattern** = Automatic renderer selection based on module type
 
-## Development Best Practices
-- Use strict types: `declare(strict_types=1);`
-- Follow PSR-4 autoloading standards
-- Implement responsive CSS for web themes
-- Use inline CSS for email themes
-- Sanitize all data before HTML output
-- Support multiple currencies and locales
+## 📋 Key Interfaces & Components
 
-## Key Components
-1. **Core** (`src/`):
-   - DigestRenderer: Main renderer class
-   - Theme management and selection
-   - HTML generation orchestration
+### Core Contracts (`src/`)
+- **ThemeInterface**: Contract for all HTML themes
+  - `renderModule(array $moduleData)`: Convert JSON to themed HTML
+  - `getThemeName()`: Return theme identifier (e.g., 'bootstrap', 'email')
+  - `renderPage(array $modules)`: Generate complete HTML page
+  - `getCSS()`: Return theme-specific CSS styles
 
-2. **Themes** (`src/Themes/`):
-   - BootstrapTheme: Modern responsive theme
-   - EmailTheme: Email client compatible theme
-   - AbstractTheme: Base implementation
+- **ModuleRendererInterface**: Contract for data-specific renderers  
+  - `canRender(array $data)`: Check if renderer supports this data type
+  - `render(array $data)`: Convert module JSON to HTML fragment
+  - `getModuleType()`: Return supported module type
 
-3. **Renderers** (`src/Renderers/`):
-   - ModuleRendererFactory: Creates specific renderers
-   - OutcomingInvoicesRenderer: Invoice analysis rendering
-   - DebtorsRenderer: Overdue analysis rendering
-   - GenericModuleRenderer: Fallback renderer
+### Built-in Themes (`src/Themes/`)
+- **BootstrapTheme**: Modern, responsive web theme using Bootstrap 5
+  - Mobile-first responsive design
+  - Interactive tables and charts
+  - Modern color scheme and typography
+  - Print-friendly CSS
+
+- **EmailTheme**: Email client compatible theme
+  - Inline CSS for maximum compatibility
+  - Table-based layouts (no CSS Grid/Flexbox)
+  - Safe color palette and fonts
+  - Outlook/Gmail/Apple Mail tested
+
+- **AbstractTheme**: Base implementation with common functionality
+  - HTML escaping and sanitization
+  - Date/number formatting helpers
+  - Common template methods
+
+### Module Renderers (`src/Renderers/`)  
+- **ModuleRendererFactory**: Auto-selects appropriate renderer
+- **OutcomingInvoicesRenderer**: Specialized for invoice analytics
+- **DebtorsRenderer**: Specialized for overdue receivables  
+- **GenericModuleRenderer**: Fallback for unknown module types
 
 ## Theme Development Pattern
 ```php
