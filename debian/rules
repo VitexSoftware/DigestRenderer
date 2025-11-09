@@ -1,0 +1,18 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@ --with phpcomposer
+
+override_dh_auto_install:
+	dh_auto_install
+
+override_dh_install:
+	dh_install
+	# Install composer.json for autoloading
+	cp composer.json debian/php-vitexsoftware-digest-renderer/usr/share/php/VitexSoftware/DigestRenderer/
+
+override_dh_auto_test:
+	# Skip tests for now - can be enabled when test suite is added
+
+override_dh_installchangelogs:
+	dh_installchangelogs

@@ -1,0 +1,13 @@
+cf8e29429d125391d8ab902426643ac8  usr/share/doc/php-vitexsoftware-digest-renderer/changelog.gz
+13b4aa929db252899b7e1070a1a77088  usr/share/php/VitexSoftware/DigestRenderer/DigestRenderer.php
+627b643068d434359155a67f6e7f5b32  usr/share/php/VitexSoftware/DigestRenderer/Renderers/AbstractModuleRenderer.php
+4af663eb12357de9cc6a1efe8fe0d26c  usr/share/php/VitexSoftware/DigestRenderer/Renderers/DebtorsRenderer.php
+c1f8d75356532b53a09aa456e222bcad  usr/share/php/VitexSoftware/DigestRenderer/Renderers/GenericModuleRenderer.php
+f545339fdada570093a8b37ebe0b72c5  usr/share/php/VitexSoftware/DigestRenderer/Renderers/ModuleRendererFactory.php
+4fc3f7cbb1088503e219e974f03d2b4d  usr/share/php/VitexSoftware/DigestRenderer/Renderers/ModuleRendererInterface.php
+b9399836a554d8e30cf1fb3964756747  usr/share/php/VitexSoftware/DigestRenderer/Renderers/OutcomingInvoicesRenderer.php
+886f43d7d1754047653165d7720b0283  usr/share/php/VitexSoftware/DigestRenderer/Themes/AbstractTheme.php
+872eff76b87d70fab34d52170f5804a2  usr/share/php/VitexSoftware/DigestRenderer/Themes/BootstrapTheme.php
+be83886550aca04c1e682037b569cd61  usr/share/php/VitexSoftware/DigestRenderer/Themes/EmailTheme.php
+7fb19cfdc1ff4d245b439435a71d8f69  usr/share/php/VitexSoftware/DigestRenderer/Themes/ThemeInterface.php
+906eb26cf622e57e12f5cde81a337a2c  usr/share/php/VitexSoftware/DigestRenderer/composer.json

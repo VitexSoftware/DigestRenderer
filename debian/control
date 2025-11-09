@@ -1,0 +1,26 @@
+Source: php-vitexsoftware-digest-renderer
+Section: web
+Priority: optional
+Maintainer: Vítězslav Dvořák <info@vitexsoftware.cz>
+Build-Depends: debhelper-compat (= 13), pkg-php-tools
+Standards-Version: 4.1.2
+Homepage: https://github.com/VitexSoftware/DigestRenderer
+
+Package: php-vitexsoftware-digest-renderer
+Architecture: all
+Depends: ${misc:Depends}, 
+         php-cli,
+         php-vitexsoftware-digest-modules (>= 1.0),
+         composer
+Description: HTML rendering library for digest modules
+ DigestRenderer provides HTML rendering capabilities for digest analytics
+ modules. It offers multiple themes including Bootstrap and Email themes
+ for generating beautiful reports from accounting system data.
+ .
+ Features:
+  * Theme-based rendering system
+  * Bootstrap theme for modern web interfaces
+  * Email theme for notification systems
+  * Module-specific renderers
+  * Responsive HTML output
+  * Easy theme customization

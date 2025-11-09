@@ -1,0 +1,10 @@
+php-vitexsoftware-digest-renderer (1.0.0) unstable; urgency=medium
+
+  * Initial release
+  * HTML rendering library for digest modules
+  * Bootstrap theme for modern web interfaces
+  * Email theme for notification systems
+  * Module-specific renderers for various data types
+  * Responsive HTML output with CSS styling
+
+ -- Vítězslav Dvořák <info@vitexsoftware.cz>  Mon, 23 Dec 2024 12:00:00 +0200

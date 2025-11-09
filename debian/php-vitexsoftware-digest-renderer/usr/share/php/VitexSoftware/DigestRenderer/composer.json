@@ -1,0 +1,33 @@
+{
+    "name": "vitexsoftware/digest-renderer",
+    "description": "HTML rendering library for accounting digest reports",
+    "type": "library",
+    "keywords": ["digest", "html", "renderer", "reports", "dashboard"],
+    "homepage": "https://github.com/VitexSoftware/DigestRenderer",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Vítězslav Dvořák",
+            "email": "info@vitexsoftware.cz",
+            "homepage": "https://vitexsoftware.cz"
+        }
+    ],
+    "require": {
+        "php": ">=8.1",
+        "ext-json": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "VitexSoftware\\DigestRenderer\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "VitexSoftware\\DigestRenderer\\Tests\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.0"
+    },
+    "minimum-stability": "stable"
+}
