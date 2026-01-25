@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.vitexsoftware.php_vitexsoftware_digest_renderer</id>
+  <metadata_license>MIT</metadata_license>
+  <project_license>GPL-2.0-or-later</project_license>
+  <name>php-vitexsoftware-digest-renderer</name>
+  <summary>HTML rendering library for digest modules</summary>
+  <description>
+    <p>
+      DigestRenderer provides HTML rendering capabilities for digest analytics modules. It offers multiple themes including Bootstrap and Email themes for generating beautiful reports from accounting system data. Features: * Theme-based rendering system * Bootstrap theme for modern web interfaces * Email theme for notification systems * Module-specific renderers * Responsive HTML output * Easy theme customization
+    </p>
+  </description>
+  <categories>
+    <category>Utility</category>
+  </categories>
+  <url type="homepage">https://github.com/VitexSoftware/DigestRenderer</url>
+  <url type="bugtracker">https://github.com/VitexSoftware/DigestRenderer/issues</url>
+  <developer id="cz.vitexsoftware">
+    <name>VitexSoftware</name>
+  </developer>
+  <content_rating type="oars-1.1"/>
+</component>
