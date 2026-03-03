@@ -3,16 +3,26 @@
 %:
 	dh $@ --with phpcomposer
 
-override_dh_auto_install:
-	dh_auto_install
+override_dh_auto_build:
+	# Generate Debian autoloader using phpab
+	phpabtpl --basedir src composer.json > debian/autoload.php.tpl
+	phpab --template debian/autoload.php.tpl --output src/autoload.php src/
 
 override_dh_install:
 	dh_install
-	# Install composer.json for autoloading
+	# Install the autoloader to /usr/share/php/VitexSoftware/DigestRenderer/
+	install -D -m 0644 src/autoload.php debian/php-vitexsoftware-digest-renderer/usr/share/php/VitexSoftware/DigestRenderer/autoload.php
+	# Register the autoloader
+	install -d debian/php-vitexsoftware-digest-renderer/usr/share/pkg-php-tools/autoloaders
+	echo 'vitexsoftware digest-renderer VitexSoftware/DigestRenderer/autoload.php' > debian/php-vitexsoftware-digest-renderer/usr/share/pkg-php-tools/autoloaders/php-vitexsoftware-digest-renderer
+	# Install composer.json for metadata
 	cp composer.json debian/php-vitexsoftware-digest-renderer/usr/share/php/VitexSoftware/DigestRenderer/
 
 override_dh_auto_test:
 	# Skip tests for now - can be enabled when test suite is added
+
+override_dh_auto_clean:
+	rm -f debian/autoload.php.tpl src/autoload.php
 
 override_dh_installchangelogs:
 	dh_installchangelogs

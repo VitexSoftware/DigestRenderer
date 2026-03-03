@@ -58,6 +58,24 @@ This library implements a **theme-based rendering system** where:
 - **DebtorsRenderer**: Specialized for overdue receivables  
 - **GenericModuleRenderer**: Fallback for unknown module types
 
+## 🔧 Development Guidelines
+
+### Coding Standards
+- **PHP 8.1+**: Use modern PHP features and strict types: `declare(strict_types=1);`
+- **PSR-12**: Follow PHP-FIG coding standards for consistency
+- **Type Safety**: Include type hints for all parameters and return types
+- **Documentation**: PHPDoc blocks for all public methods and classes
+- **Testing**: PHPUnit tests for all new functionality
+- **Internationalization**: Use `_()` functions for translatable strings
+
+### Code Quality Requirements
+- **Syntax Validation**: After every PHP file edit, run `php -l filename.php` for syntax checking
+- **HTML Safety**: Sanitize all data before HTML output to prevent XSS
+- **Responsive Design**: Implement mobile-first responsive CSS for web themes
+- **Email Compatibility**: Use inline CSS and table-based layouts for email themes
+- **Performance**: Optimize rendering for large datasets and multiple modules
+- **Accessibility**: Implement ARIA labels and semantic HTML
+
 ## Theme Development Pattern
 ```php
 class CustomTheme extends AbstractTheme
@@ -130,5 +148,45 @@ Works with:
 - **DigestModules**: Source of JSON data
 - **AbraFlexi-Digest**: Legacy system integration  
 - **Pohoda-Digest**: Pohoda system integration
+
+## ⚠️ Important Notes for Copilot
+
+1. **Presentation Layer Only**: This library focuses solely on HTML rendering - no data processing
+2. **Theme Flexibility**: Support multiple themes for different use cases (web, email, print)
+3. **Data Safety**: Always sanitize input data before HTML output
+4. **Email Compatibility**: Use table-based layouts and inline CSS for email themes
+5. **Responsive Design**: Implement mobile-first approach for web themes
+6. **Performance**: Optimize rendering for large datasets and multiple modules
+
+### Development Best Practices
+- **Code Comments**: Write in English using complete sentences and proper grammar
+- **Variable Names**: Use meaningful names that describe their purpose
+- **Constants**: Avoid magic numbers/strings; define constants instead
+- **Exception Handling**: Always provide meaningful error messages
+- **Commit Messages**: Use imperative mood and keep them concise
+- **Security**: Ensure code is secure and doesn't expose sensitive information
+- **Compatibility**: Maintain compatibility with latest PHP and library versions
+- **Testing**: Create/update PHPUnit test files for all new/modified classes
+- **Maintainability**: Follow best practices for maintainable code
+
+### Testing Requirements
+- **PHPUnit Integration**: All new classes require corresponding test files
+- **Test Coverage**: Aim for comprehensive test coverage of all functionality
+- **Mock Usage**: Use mocks for external dependencies during testing
+- **Test Structure**: Follow PSR-12 coding standards in test files
+
+### CSS/HTML Guidelines
+- **Web Themes**: Use modern CSS features (Grid, Flexbox) with fallbacks
+- **Email Themes**: Use table-based layouts with inline CSS only
+- **Responsive**: Mobile-first design with proper breakpoints
+- **Accessibility**: Include ARIA labels, semantic HTML, proper color contrast
+- **Performance**: Optimize CSS delivery, minimize DOM complexity
+
+When working with this codebase:
+- Always implement theme and renderer interfaces when creating new components
+- Use the AbstractTheme base class for common functionality
+- Follow email-safe HTML/CSS practices for email themes
+- Include comprehensive error handling and validation
+- Add PHPUnit tests for new themes and renderers
 - **Email systems**: Direct HTML email sending
 - **Web applications**: Embedded HTML reports
