@@ -1,10 +1,10 @@
 {
     "name": "vitexsoftware/digest-renderer",
-    "description": "HTML rendering library for accounting digest reports",
+    "description": "Markdown-first rendering library for accounting digest reports (HTML, PDF)",
     "type": "library",
-    "keywords": ["digest", "html", "renderer", "reports", "dashboard"],
+    "keywords": ["digest", "markdown", "html", "pdf", "renderer", "reports"],
     "homepage": "https://github.com/VitexSoftware/DigestRenderer",
-    "license": "GPL-2.0-or-later",
+    "license": "MIT",
     "authors": [
         {
             "name": "Vítězslav Dvořák",
@@ -14,8 +14,15 @@
     ],
     "require": {
         "php": ">=8.1",
-        "ext-json": "*"
+        "ext-json": "*",
+        "ext-mbstring": "*",
+        "vitexus/markdown": "^0.2",
+        "vitexus/dompdf": "^3.0"
     },
+    "repositories": [
+        {"type": "vcs", "url": "https://github.com/Vitexus/markdown.git"},
+        {"type": "vcs", "url": "https://github.com/Vitexus/dompdf.git"}
+    ],
     "autoload": {
         "psr-4": {
             "VitexSoftware\\DigestRenderer\\": "src/"
