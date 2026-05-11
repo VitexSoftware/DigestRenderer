@@ -83,7 +83,7 @@ abstract class AbstractModuleRenderer implements ModuleRendererInterface
     {
         $title = $moduleData['heading'] ?? $this->getModuleName();
         $error = $moduleData['error'] ?? $moduleData['metadata']['error'] ?? [];
-        $message = $error['message'] ?? 'Unknown error occurred';
+        $message = is_string($error) ? $error : ($error['message'] ?? 'Unknown error occurred');
 
         return $this->markdownHeading($title, 2) . "\n> **" . _('Error') . ":** $message\n";
     }
