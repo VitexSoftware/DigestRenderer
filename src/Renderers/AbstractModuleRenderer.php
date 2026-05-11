@@ -25,7 +25,7 @@ abstract class AbstractModuleRenderer implements ModuleRendererInterface
     /**
      * Module name
      */
-    protected string $moduleName;
+    protected string $moduleName = '';
 
     /**
      * Constructor
