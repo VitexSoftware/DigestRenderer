@@ -59,7 +59,8 @@ class MarkdownConverter
      */
     public function convert(string $markdown, array $meta = []): string
     {
-        $mdInstance = Markdown::new($markdown);
+        $mdInstance = Markdown::new();
+        $mdInstance->setContent($markdown);
         $bodyHtml = $mdInstance->toHtml();
 
         return $this->wrapInHtmlDocument($bodyHtml, $meta);
