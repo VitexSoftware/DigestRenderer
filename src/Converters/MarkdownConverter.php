@@ -15,13 +15,13 @@ declare(strict_types=1);
 
 namespace VitexSoftware\DigestRenderer\Converters;
 
-use FastVolt\Helper\Markdown;
+use League\CommonMark\CommonMarkConverter;
 use VitexSoftware\DigestRenderer\Themes\ThemeInterface;
 
 /**
  * Converts Markdown content to a styled HTML document
  *
- * Uses FastVolt/Markdown for Markdown → HTML conversion and wraps
+ * Uses league/commonmark for Markdown → HTML conversion and wraps
  * the result in a themed HTML document with CSS styles.
  *
  * @author Vítězslav Dvořák <info@vitexsoftware.cz>
@@ -59,9 +59,8 @@ class MarkdownConverter
      */
     public function convert(string $markdown, array $meta = []): string
     {
-        $mdInstance = Markdown::new();
-        $mdInstance->setContent($markdown);
-        $bodyHtml = $mdInstance->toHtml();
+        $converter = new CommonMarkConverter();
+        $bodyHtml = $converter->convert($markdown)->getContent();
 
         return $this->wrapInHtmlDocument($bodyHtml, $meta);
     }
