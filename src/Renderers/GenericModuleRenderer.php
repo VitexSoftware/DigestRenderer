@@ -15,8 +15,6 @@ declare(strict_types=1);
 
 namespace VitexSoftware\DigestRenderer\Renderers;
 
-use VitexSoftware\DigestRenderer\Themes\ThemeInterface;
-
 /**
  * Generic module renderer for unknown module types
  *
@@ -32,32 +30,32 @@ class GenericModuleRenderer extends AbstractModuleRenderer
         $title = $moduleData['heading'] ?? $this->getModuleName();
         $data = $moduleData['data'] ?? [];
 
-        $content = '';
+        $md = '';
 
         // Render summary if available
         if (isset($data['summary'])) {
-            $content .= $this->theme->renderSummary('Summary', $data['summary']);
+            $md .= $this->markdownSummary(_('Summary'), $data['summary']);
         }
 
         // Render other data sections
         foreach ($data as $key => $value) {
             if ($key === 'summary') {
-                continue; // Already rendered
+                continue;
             }
 
-            $sectionTitle = ucwords(str_replace('_', ' ', $key));
-            
+            $sectionTitle = _(ucwords(str_replace('_', ' ', $key)));
+
             if (is_array($value) && $this->isTableData($value)) {
-                $content .= "<h4>$sectionTitle</h4>";
-                $content .= $this->renderTableFromArray($value);
+                $md .= $this->markdownHeading($sectionTitle, 4);
+                $md .= $this->renderTableFromArray($value);
             } elseif (is_array($value)) {
-                $content .= $this->theme->renderSummary($sectionTitle, $value);
+                $md .= $this->markdownSummary($sectionTitle, $value);
             } else {
-                $content .= "<p><strong>$sectionTitle:</strong> " . htmlspecialchars((string)$value) . "</p>";
+                $md .= "- **$sectionTitle:** " . (string) $value . "\n";
             }
         }
 
-        return $this->theme->renderCard($title, $content);
+        return $this->markdownSection($title, $md);
     }
 
     /**
@@ -73,26 +71,26 @@ class GenericModuleRenderer extends AbstractModuleRenderer
         }
 
         $firstItem = reset($data);
-        
+
         return is_array($firstItem) && !empty($firstItem);
     }
 
     /**
-     * Render table from array data
+     * Render Markdown table from array data
      *
      * @param array<array<string, mixed>> $data Array data
-     * @return string Table HTML
+     * @return string Markdown table
      */
     private function renderTableFromArray(array $data): string
     {
         if (empty($data)) {
-            return '<p>No data available</p>';
+            return _('No data available') . "\n\n";
         }
 
         $firstRow = reset($data);
-        
+
         if (!is_array($firstRow)) {
-            return '<p>Invalid data format</p>';
+            return _('Invalid data format') . "\n\n";
         }
 
         $headers = array_keys($firstRow);
@@ -101,14 +99,16 @@ class GenericModuleRenderer extends AbstractModuleRenderer
         foreach ($data as $item) {
             if (is_array($item)) {
                 $row = [];
+
                 foreach ($headers as $header) {
                     $value = $item[$header] ?? '';
-                    $row[] = is_array($value) ? json_encode($value) : (string)$value;
+                    $row[] = is_array($value) ? json_encode($value) : (string) $value;
                 }
+
                 $rows[] = $row;
             }
         }
 
-        return $this->theme->renderTable($headers, $rows);
+        return $this->markdownTable($headers, $rows);
     }
 }

@@ -23,10 +23,10 @@ namespace VitexSoftware\DigestRenderer\Renderers;
 interface ModuleRendererInterface
 {
     /**
-     * Render module data to HTML
+     * Render module data to Markdown
      *
      * @param array<string, mixed> $moduleData Module data from DigestModules
-     * @return string HTML output
+     * @return string Markdown output
      */
     public function render(array $moduleData): string;
 

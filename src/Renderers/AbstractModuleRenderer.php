@@ -15,20 +15,13 @@ declare(strict_types=1);
 
 namespace VitexSoftware\DigestRenderer\Renderers;
 
-use VitexSoftware\DigestRenderer\Themes\ThemeInterface;
-
 /**
- * Abstract base module renderer
+ * Abstract base module renderer — produces Markdown output
  *
  * @author Vítězslav Dvořák <info@vitexsoftware.cz>
  */
 abstract class AbstractModuleRenderer implements ModuleRendererInterface
 {
-    /**
-     * Theme to use for rendering
-     */
-    protected ThemeInterface $theme;
-
     /**
      * Module name
      */
@@ -37,12 +30,10 @@ abstract class AbstractModuleRenderer implements ModuleRendererInterface
     /**
      * Constructor
      *
-     * @param ThemeInterface $theme Theme to use
      * @param string $moduleName Module name (optional, auto-detected)
      */
-    public function __construct(ThemeInterface $theme, string $moduleName = '')
+    public function __construct(string $moduleName = '')
     {
-        $this->theme = $theme;
         $this->moduleName = $moduleName ?: $this->getModuleName();
     }
 
@@ -58,7 +49,7 @@ abstract class AbstractModuleRenderer implements ModuleRendererInterface
         // Auto-detect from class name
         $className = basename(str_replace('\\', '/', static::class));
         $moduleName = str_replace('Renderer', '', $className);
-        
+
         return strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $moduleName));
     }
 
@@ -78,7 +69,7 @@ abstract class AbstractModuleRenderer implements ModuleRendererInterface
      * Render successful module data
      *
      * @param array<string, mixed> $moduleData Module data
-     * @return string HTML output
+     * @return string Markdown output
      */
     abstract protected function renderSuccess(array $moduleData): string;
 
@@ -86,7 +77,7 @@ abstract class AbstractModuleRenderer implements ModuleRendererInterface
      * Render error state
      *
      * @param array<string, mixed> $moduleData Module data with error
-     * @return string Error HTML
+     * @return string Markdown error block
      */
     protected function renderError(array $moduleData): string
     {
@@ -94,7 +85,7 @@ abstract class AbstractModuleRenderer implements ModuleRendererInterface
         $error = $moduleData['error'] ?? [];
         $message = $error['message'] ?? 'Unknown error occurred';
 
-        return $this->theme->renderError($title, $message);
+        return $this->markdownHeading($title, 2) . "\n> **" . _('Error') . ":** $message\n";
     }
 
     /**
@@ -103,24 +94,99 @@ abstract class AbstractModuleRenderer implements ModuleRendererInterface
      * @param array<string, mixed>|float $currencyData Currency data or amount
      * @return string Formatted currency
      */
-    protected function formatCurrency($currencyData): string
+    protected function formatCurrency(array|float $currencyData): string
     {
         if (is_array($currencyData)) {
-            return $currencyData['formatted'] ?? 
-                   ($currencyData['amount'] . ' ' . ($currencyData['currency'] ?? 'CZK'));
+            return $currencyData['formatted']
+                ?? ($currencyData['amount'] . ' ' . ($currencyData['currency'] ?? 'CZK'));
         }
 
-        return number_format((float)$currencyData, 2, ',', ' ') . ' CZK';
+        return number_format($currencyData, 2, ',', ' ') . ' CZK';
+    }
+
+    // ---- Markdown helpers ----
+
+    /**
+     * Render a Markdown heading
+     *
+     * @param string $text  Heading text
+     * @param int    $level 1-6
+     * @return string
+     */
+    protected function markdownHeading(string $text, int $level = 2): string
+    {
+        return str_repeat('#', $level) . ' ' . $text . "\n";
     }
 
     /**
-     * Create summary data array
+     * Render a Markdown table
      *
-     * @param array<string, mixed> $data Source data
-     * @return array<string, mixed> Summary data
+     * @param array<string>        $headers Column headers
+     * @param array<array<string>> $rows    Row data
+     * @return string
      */
-    protected function createSummary(array $data): array
+    protected function markdownTable(array $headers, array $rows): string
     {
-        return $data['summary'] ?? [];
+        if (empty($headers)) {
+            return '';
+        }
+
+        $md = '| ' . implode(' | ', $headers) . " |\n";
+        $md .= '|' . implode('|', array_fill(0, count($headers), ' --- ')) . "|\n";
+
+        foreach ($rows as $row) {
+            // Pad row to match header count
+            $row = array_pad($row, count($headers), '');
+            $md .= '| ' . implode(' | ', array_map(fn ($v) => str_replace('|', '\|', (string) $v), $row)) . " |\n";
+        }
+
+        return $md . "\n";
+    }
+
+    /**
+     * Render a Markdown summary (key-value list)
+     *
+     * @param string               $title Title for the summary
+     * @param array<string, mixed> $data  Key-value pairs
+     * @return string
+     */
+    protected function markdownSummary(string $title, array $data): string
+    {
+        $md = $this->markdownHeading($title, 4);
+
+        foreach ($data as $key => $value) {
+            $md .= "- **$key:** " . (string) $value . "\n";
+        }
+
+        return $md . "\n";
+    }
+
+    /**
+     * Render a Markdown unordered list
+     *
+     * @param array<string> $items List items
+     * @return string
+     */
+    protected function markdownList(array $items): string
+    {
+        $md = '';
+
+        foreach ($items as $item) {
+            $md .= "- $item\n";
+        }
+
+        return $md . "\n";
+    }
+
+    /**
+     * Wrap content in a Markdown module section (heading + content)
+     *
+     * @param string $title   Section title
+     * @param string $content Section Markdown content
+     * @return string
+     */
+    protected function markdownSection(string $title, string $content): string
+    {
+        return $this->markdownHeading($title, 2) . $content . "\n";
     }
 }

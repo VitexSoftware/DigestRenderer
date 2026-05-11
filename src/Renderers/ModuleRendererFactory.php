@@ -15,8 +15,6 @@ declare(strict_types=1);
 
 namespace VitexSoftware\DigestRenderer\Renderers;
 
-use VitexSoftware\DigestRenderer\Themes\ThemeInterface;
-
 /**
  * Factory for creating module renderers
  *
@@ -33,33 +31,44 @@ class ModuleRendererFactory
         'outcoming_invoices' => OutcomingInvoicesRenderer::class,
         'incoming_invoices' => IncomingInvoicesRenderer::class,
         'debtors' => DebtorsRenderer::class,
+        'incoming_payments' => CurrencyTotalsRenderer::class,
+        'outcoming_payments' => CurrencyTotalsRenderer::class,
         'new_customers' => NewCustomersRenderer::class,
-        'best_sellers' => BestSellersRenderer::class,
+        'without_email' => WithoutEmailRenderer::class,
+        'without_tel' => WithoutTelRenderer::class,
+        'waiting_income' => WaitingIncomeRenderer::class,
         'waiting_payments' => WaitingPaymentsRenderer::class,
+        'reminds' => RemindsRenderer::class,
+        'best_sellers' => BestSellersRenderer::class,
+        'unmatched_payments' => UnmatchedPaymentsRenderer::class,
+        'unmatched_invoices' => UnmatchedInvoicesRenderer::class,
+        'outcoming_invoices_hidden' => OutcomingInvoicesHiddenRenderer::class,
+        'daily_income_chart' => IncomeChartRenderer::class,
+        'weekly_income_chart' => IncomeChartRenderer::class,
+        'purchase_price_lower_than_sales' => PurchasePriceLowerThanSalesRenderer::class,
     ];
 
     /**
      * Create renderer for module
      *
      * @param string $moduleName Module name
-     * @param ThemeInterface $theme Theme to use
      * @return ModuleRendererInterface
      * @throws \InvalidArgumentException If no renderer found for module
      */
-    public function createRenderer(string $moduleName, ThemeInterface $theme): ModuleRendererInterface
+    public function createRenderer(string $moduleName): ModuleRendererInterface
     {
         if (!isset($this->rendererClasses[$moduleName])) {
             // Fall back to generic renderer
-            return new GenericModuleRenderer($theme, $moduleName);
+            return new GenericModuleRenderer($moduleName);
         }
 
         $rendererClass = $this->rendererClasses[$moduleName];
-        
+
         if (!class_exists($rendererClass)) {
             throw new \InvalidArgumentException("Renderer class not found: $rendererClass");
         }
 
-        return new $rendererClass($theme);
+        return new $rendererClass();
     }
 
     /**

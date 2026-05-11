@@ -15,22 +15,30 @@ declare(strict_types=1);
 
 namespace VitexSoftware\DigestRenderer;
 
-use VitexSoftware\DigestRenderer\Themes\ThemeInterface;
+use VitexSoftware\DigestRenderer\Converters\MarkdownConverter;
+use VitexSoftware\DigestRenderer\Converters\PdfConverter;
+use VitexSoftware\DigestRenderer\Renderers\ModuleRendererFactory;
 use VitexSoftware\DigestRenderer\Themes\BootstrapTheme;
 use VitexSoftware\DigestRenderer\Themes\EmailTheme;
-use VitexSoftware\DigestRenderer\Renderers\ModuleRendererFactory;
+use VitexSoftware\DigestRenderer\Themes\ThemeInterface;
 
 /**
  * Main digest renderer
  *
- * Converts structured digest data into HTML output
+ * Primary output is **Markdown**. Optionally converts to HTML (via
+ * MarkdownConverter + theme CSS) or PDF (via PdfConverter + Dompdf).
+ *
+ * Supported output formats (pass as second argument to render()):
+ *   - `md`   — Markdown (default)
+ *   - `html` — Markdown → HTML with theme styles
+ *   - `pdf`  — Markdown → HTML → PDF
  *
  * @author Vítězslav Dvořák <info@vitexsoftware.cz>
  */
 class DigestRenderer
 {
     /**
-     * Current theme
+     * Theme used for HTML/PDF output
      */
     private ThemeInterface $theme;
 
@@ -40,19 +48,14 @@ class DigestRenderer
     private ModuleRendererFactory $moduleFactory;
 
     /**
-     * Custom CSS styles
+     * Custom CSS styles (HTML/PDF only)
      */
     private string $customCss = '';
 
     /**
-     * Custom template path
-     */
-    private ?string $customTemplate = null;
-
-    /**
      * Constructor
      *
-     * @param ThemeInterface|null $theme Theme to use (defaults to Bootstrap)
+     * @param ThemeInterface|null $theme Theme for HTML/PDF output (defaults to Bootstrap)
      */
     public function __construct(?ThemeInterface $theme = null)
     {
@@ -63,7 +66,7 @@ class DigestRenderer
     /**
      * Set theme by name
      *
-     * @param string $themeName Theme name (bootstrap, email, print)
+     * @param string $themeName Theme name (bootstrap, email)
      * @return self
      */
     public function setTheme(string $themeName): self
@@ -78,7 +81,7 @@ class DigestRenderer
     }
 
     /**
-     * Set custom CSS
+     * Set custom CSS (affects HTML and PDF output only)
      *
      * @param string $css Custom CSS styles
      * @return self
@@ -86,85 +89,98 @@ class DigestRenderer
     public function setCustomCss(string $css): self
     {
         $this->customCss = $css;
-        
+
         return $this;
     }
 
     /**
-     * Set custom template path
-     *
-     * @param string $templatePath Path to custom template file
-     * @return self
-     */
-    public function setTemplate(string $templatePath): self
-    {
-        $this->customTemplate = $templatePath;
-        
-        return $this;
-    }
-
-    /**
-     * Render digest data to HTML
+     * Render digest data
      *
      * @param array<string, mixed> $digestData Structured digest data
-     * @return string HTML output
+     * @param string               $format     Output format: md, html, pdf
+     * @return string Rendered output
      */
-    public function render(array $digestData): string
+    public function render(array $digestData, string $format = 'md'): string
     {
-        try {
-            // Validate data structure
-            $this->validateDigestData($digestData);
+        $this->validateDigestData($digestData);
 
-            // Prepare template variables
-            $templateVars = [
-                'digest' => $digestData['digest'] ?? [],
-                'modules' => $digestData['modules'] ?? [],
-                'benchmarks' => $digestData['benchmarks'] ?? [],
-                'theme' => $this->theme,
-                'customCss' => $this->customCss,
-                'renderedModules' => $this->renderModules($digestData['modules'] ?? []),
-            ];
+        $markdown = $this->renderMarkdown($digestData);
 
-            // Use custom template or default
-            if ($this->customTemplate && file_exists($this->customTemplate)) {
-                return $this->renderTemplate($this->customTemplate, $templateVars);
-            }
-
-            return $this->theme->render($templateVars);
-
-        } catch (\Throwable $e) {
-            return $this->renderError($e);
-        }
+        return match ($format) {
+            'md' => $markdown,
+            'html' => $this->convertToHtml($markdown, $digestData['digest'] ?? []),
+            'pdf' => $this->convertToPdf($markdown, $digestData['digest'] ?? []),
+            default => throw new \InvalidArgumentException("Unsupported format: $format"),
+        };
     }
 
     /**
-     * Render all modules
+     * Render all modules to a single Markdown document
      *
-     * @param array<string, mixed> $modules Module data
-     * @return array<string, string> Rendered module HTML
+     * @param array<string, mixed> $digestData Full digest data
+     * @return string Markdown document
      */
-    private function renderModules(array $modules): array
+    private function renderMarkdown(array $digestData): string
     {
-        $rendered = [];
+        $digest = $digestData['digest'] ?? [];
+        $companyName = $digest['company']['name'] ?? _('Digest Report');
+        $periodStart = $digest['period']['start'] ?? '';
+        $periodEnd = $digest['period']['end'] ?? '';
+
+        $md = "# $companyName\n";
+
+        if ($periodStart && $periodEnd) {
+            $md .= sprintf("%s: %s – %s\n\n", _('Period'), $periodStart, $periodEnd);
+        }
+
+        $modules = $digestData['modules'] ?? [];
 
         foreach ($modules as $moduleKey => $moduleData) {
             try {
                 $renderer = $this->moduleFactory->createRenderer(
                     $moduleData['module_name'] ?? $moduleKey,
-                    $this->theme
                 );
 
-                $rendered[$moduleKey] = $renderer->render($moduleData);
-
+                $md .= $renderer->render($moduleData);
             } catch (\Throwable $e) {
-                $rendered[$moduleKey] = $this->theme->renderError(
-                    $moduleData['heading'] ?? $moduleKey,
-                    $e->getMessage()
-                );
+                $md .= "## $moduleKey\n\n> **" . _('Error') . ":** {$e->getMessage()}\n\n";
             }
         }
 
-        return $rendered;
+        $timestamp = $digest['timestamp'] ?? date('c');
+        $md .= "---\n";
+        $md .= sprintf("*%s %s*\n", _('Generated on'), date('Y-m-d H:i:s', strtotime($timestamp)));
+
+        return $md;
+    }
+
+    /**
+     * Convert Markdown to themed HTML
+     *
+     * @param string               $markdown Markdown content
+     * @param array<string, mixed> $meta     Digest metadata
+     * @return string HTML document
+     */
+    private function convertToHtml(string $markdown, array $meta): string
+    {
+        $converter = new MarkdownConverter($this->theme, $this->customCss);
+
+        return $converter->convert($markdown, $meta);
+    }
+
+    /**
+     * Convert Markdown to PDF (Markdown → HTML → PDF)
+     *
+     * @param string               $markdown Markdown content
+     * @param array<string, mixed> $meta     Digest metadata
+     * @return string Raw PDF content
+     */
+    private function convertToPdf(string $markdown, array $meta): string
+    {
+        $html = $this->convertToHtml($markdown, $meta);
+        $pdfConverter = new PdfConverter();
+
+        return $pdfConverter->convert($html);
     }
 
     /**
@@ -175,11 +191,6 @@ class DigestRenderer
      */
     private function validateDigestData(array $digestData): void
     {
-        if (!is_array($digestData)) {
-            throw new \InvalidArgumentException('Digest data must be an array');
-        }
-
-        // Check basic structure
         if (!isset($digestData['digest']) || !is_array($digestData['digest'])) {
             throw new \InvalidArgumentException('Missing or invalid digest metadata');
         }
@@ -187,36 +198,5 @@ class DigestRenderer
         if (!isset($digestData['modules']) || !is_array($digestData['modules'])) {
             throw new \InvalidArgumentException('Missing or invalid modules data');
         }
-    }
-
-    /**
-     * Render custom template
-     *
-     * @param string $templatePath Template file path
-     * @param array<string, mixed> $vars Template variables
-     * @return string Rendered HTML
-     */
-    private function renderTemplate(string $templatePath, array $vars): string
-    {
-        extract($vars);
-        
-        ob_start();
-        include $templatePath;
-        
-        return ob_get_clean() ?: '';
-    }
-
-    /**
-     * Render error message
-     *
-     * @param \Throwable $error Error to render
-     * @return string Error HTML
-     */
-    private function renderError(\Throwable $error): string
-    {
-        return $this->theme->renderError(
-            'Digest Rendering Error',
-            $error->getMessage()
-        );
     }
 }

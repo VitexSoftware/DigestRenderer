@@ -27,99 +27,71 @@ class OutcomingInvoicesRenderer extends AbstractModuleRenderer
      */
     protected function renderSuccess(array $moduleData): string
     {
-        $title = $moduleData['heading'] ?? 'Outcoming Invoices';
+        $title = $moduleData['heading'] ?? _('Outcoming invoices');
         $data = $moduleData['data'] ?? [];
-        
-        $content = '';
 
-        // Render summary
+        $md = '';
+
         if (isset($data['summary'])) {
-            $content .= $this->renderInvoiceSummary($data['summary']);
+            $summary = $data['summary'];
+            $md .= $this->markdownSummary(_('Invoice summary'), [
+                _('Total invoices') => $summary['total_count'] ?? 0,
+                _('Active invoices') => $summary['active_count'] ?? 0,
+                _('Cancelled invoices') => $summary['cancelled_count'] ?? 0,
+                _('Document types') => $summary['document_types_count'] ?? 0,
+                _('Currencies') => is_array($summary['currencies'] ?? null)
+                    ? implode(', ', $summary['currencies']) : 'N/A',
+            ]);
         }
 
-        // Render totals by currency
         if (isset($data['totals_by_currency'])) {
-            $content .= $this->renderCurrencyTotals($data['totals_by_currency']);
+            $rows = [];
+
+            foreach ($data['totals_by_currency'] as $currency => $currencyData) {
+                $rows[] = [$currency, $this->formatCurrency($currencyData)];
+            }
+
+            $md .= $this->markdownHeading(_('Totals by currency'), 4);
+            $md .= $this->markdownTable([_('Currency'), _('Amount')], $rows);
         }
 
-        // Render document type breakdown
         if (isset($data['by_document_type'])) {
-            $content .= $this->renderDocumentTypeBreakdown($data['by_document_type']);
+            $md .= $this->renderDocumentTypeBreakdown($data['by_document_type']);
         }
 
-        return $this->theme->renderCard($title, $content);
-    }
-
-    /**
-     * Render invoice summary
-     *
-     * @param array<string, mixed> $summary Summary data
-     * @return string Summary HTML
-     */
-    private function renderInvoiceSummary(array $summary): string
-    {
-        $summaryData = [
-            'Total Invoices' => $summary['total_count'] ?? 0,
-            'Active Invoices' => $summary['active_count'] ?? 0,
-            'Cancelled Invoices' => $summary['cancelled_count'] ?? 0,
-            'Document Types' => $summary['document_types_count'] ?? 0,
-            'Currencies' => is_array($summary['currencies'] ?? null) ? 
-                implode(', ', $summary['currencies']) : 'N/A',
-        ];
-
-        return $this->theme->renderSummary('Invoice Summary', $summaryData);
-    }
-
-    /**
-     * Render currency totals
-     *
-     * @param array<string, mixed> $currencyTotals Currency totals data
-     * @return string Currency totals HTML
-     */
-    private function renderCurrencyTotals(array $currencyTotals): string
-    {
-        $content = '<h4>Totals by Currency</h4>';
-        
-        $summaryData = [];
-        foreach ($currencyTotals as $currency => $currencyData) {
-            $summaryData[$currency] = $this->formatCurrency($currencyData);
-        }
-
-        return $content . $this->theme->renderSummary('Currency Totals', $summaryData);
+        return $this->markdownSection($title, $md);
     }
 
     /**
      * Render document type breakdown
      *
      * @param array<string, mixed> $docTypes Document type data
-     * @return string Document type breakdown HTML
+     * @return string Markdown table
      */
     private function renderDocumentTypeBreakdown(array $docTypes): string
     {
-        $content = '<h4>Breakdown by Document Type</h4>';
-        
-        $headers = ['Document Type', 'Count'];
-        $rows = [];
+        $headers = [_('Document type'), _('Count')];
 
-        // Collect all currencies
         $allCurrencies = [];
+
         foreach ($docTypes as $docTypeData) {
             if (isset($docTypeData['totals'])) {
                 $allCurrencies = array_merge($allCurrencies, array_keys($docTypeData['totals']));
             }
         }
+
         $allCurrencies = array_unique($allCurrencies);
 
-        // Add currency headers
         foreach ($allCurrencies as $currency) {
-            $headers[] = "Total ($currency)";
+            $headers[] = sprintf(_('Total') . ' (%s)', $currency);
         }
 
-        // Build table rows
+        $rows = [];
+
         foreach ($docTypes as $docType => $docTypeData) {
             $row = [
-                htmlspecialchars($docType),
-                $docTypeData['count'] ?? 0,
+                $docType,
+                (string) ($docTypeData['count'] ?? 0),
             ];
 
             foreach ($allCurrencies as $currency) {
@@ -130,6 +102,7 @@ class OutcomingInvoicesRenderer extends AbstractModuleRenderer
             $rows[] = $row;
         }
 
-        return $content . $this->theme->renderTable($headers, $rows, ['class' => 'table table-striped']);
+        return $this->markdownHeading(_('Breakdown by document type'), 4)
+            . $this->markdownTable($headers, $rows);
     }
 }

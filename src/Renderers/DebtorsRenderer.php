@@ -27,129 +27,84 @@ class DebtorsRenderer extends AbstractModuleRenderer
      */
     protected function renderSuccess(array $moduleData): string
     {
-        $title = $moduleData['heading'] ?? 'Debtors';
+        $title = $moduleData['heading'] ?? _('Debtors');
         $data = $moduleData['data'] ?? [];
-        
-        $content = '';
 
-        // Render summary
+        $md = '';
+
         if (isset($data['summary'])) {
-            $content .= $this->renderDebtorSummary($data['summary']);
+            $md .= $this->markdownSummary(_('Debtor summary'), [
+                _('Total debtors') => $data['summary']['total_debtors'] ?? 0,
+                _('Total invoices') => $data['summary']['total_invoices'] ?? 0,
+                _('Currencies') => is_array($data['summary']['currencies'] ?? null)
+                    ? implode(', ', $data['summary']['currencies']) : 'N/A',
+            ]);
         }
 
-        // Render totals by currency
         if (isset($data['totals_by_currency'])) {
-            $content .= $this->renderCurrencyTotals($data['totals_by_currency']);
+            $rows = [];
+
+            foreach ($data['totals_by_currency'] as $currency => $currencyData) {
+                $rows[] = [$currency, $this->formatCurrency($currencyData)];
+            }
+
+            $md .= $this->markdownHeading(_('Outstanding amounts'), 4);
+            $md .= $this->markdownTable([_('Currency'), _('Amount')], $rows);
         }
 
-        // Render overdue ranges
         if (isset($data['overdue_ranges'])) {
-            $content .= $this->renderOverdueRanges($data['overdue_ranges']);
+            $rows = [];
+
+            foreach ($data['overdue_ranges'] as $range => $count) {
+                $rows[] = [$range . ' ' . _('days'), (string) $count];
+            }
+
+            $md .= $this->markdownHeading(_('Invoices by overdue period'), 4);
+            $md .= $this->markdownTable([_('Overdue period'), _('Number of invoices')], $rows);
         }
 
-        // Render top debtors
         if (isset($data['top_debtors'])) {
-            $content .= $this->renderTopDebtors($data['top_debtors']);
+            $md .= $this->renderTopDebtors($data['top_debtors']);
         }
 
-        return $this->theme->renderCard($title, $content);
+        return $this->markdownSection($title, $md);
     }
 
     /**
-     * Render debtor summary
+     * Render top debtors table
      *
-     * @param array<string, mixed> $summary Summary data
-     * @return string Summary HTML
-     */
-    private function renderDebtorSummary(array $summary): string
-    {
-        $summaryData = [
-            'Total Debtors' => $summary['total_debtors'] ?? 0,
-            'Total Invoices' => $summary['total_invoices'] ?? 0,
-            'Currencies' => is_array($summary['currencies'] ?? null) ? 
-                implode(', ', $summary['currencies']) : 'N/A',
-        ];
-
-        return $this->theme->renderSummary('Debtor Summary', $summaryData);
-    }
-
-    /**
-     * Render currency totals
-     *
-     * @param array<string, mixed> $currencyTotals Currency totals data
-     * @return string Currency totals HTML
-     */
-    private function renderCurrencyTotals(array $currencyTotals): string
-    {
-        $content = '<h4>Total Outstanding by Currency</h4>';
-        
-        $summaryData = [];
-        foreach ($currencyTotals as $currency => $currencyData) {
-            $summaryData[$currency] = $this->formatCurrency($currencyData);
-        }
-
-        return $content . $this->theme->renderSummary('Outstanding Amounts', $summaryData);
-    }
-
-    /**
-     * Render overdue ranges
-     *
-     * @param array<string, mixed> $overdueRanges Overdue ranges data
-     * @return string Overdue ranges HTML
-     */
-    private function renderOverdueRanges(array $overdueRanges): string
-    {
-        $content = '<h4>Invoices by Overdue Period</h4>';
-        
-        $headers = ['Overdue Period', 'Number of Invoices'];
-        $rows = [];
-
-        foreach ($overdueRanges as $range => $count) {
-            $rows[] = [
-                $range . ' days',
-                (string)$count,
-            ];
-        }
-
-        return $content . $this->theme->renderTable($headers, $rows, ['class' => 'table table-striped']);
-    }
-
-    /**
-     * Render top debtors
-     *
-     * @param array<string, mixed> $topDebtors Top debtors data
-     * @return string Top debtors HTML
+     * @param array<int, array<string, mixed>> $topDebtors Top debtors data
+     * @return string Markdown table
      */
     private function renderTopDebtors(array $topDebtors): string
     {
-        $content = '<h4>Top Debtors</h4>';
-        
         if (empty($topDebtors)) {
-            return $content . '<p>No debtors data available</p>';
+            return $this->markdownHeading(_('Top debtors'), 4) . _('No debtors data available') . "\n\n";
         }
 
-        $headers = ['Company', 'Invoices Count', 'Max Overdue Days'];
-        
-        // Collect all currencies
+        $headers = [_('Company'), _('Invoices count'), _('Max overdue days')];
+
         $allCurrencies = [];
+
         foreach ($topDebtors as $debtor) {
             if (isset($debtor['total_amount'])) {
                 $allCurrencies = array_merge($allCurrencies, array_keys($debtor['total_amount']));
             }
         }
+
         $allCurrencies = array_unique($allCurrencies);
 
-        // Add currency headers
         foreach ($allCurrencies as $currency) {
-            $headers[] = "Amount ($currency)";
+            $headers[] = sprintf(_('Amount') . ' (%s)', $currency);
         }
 
         $rows = [];
+
         foreach ($topDebtors as $debtor) {
             $row = [
-                htmlspecialchars($debtor['company'] ?? 'Unknown'),
-                (string)($debtor['invoices_count'] ?? 0),
-                (string)($debtor['overdue_days_max'] ?? 0),
+                $debtor['company'] ?? _('Unknown'),
+                (string) ($debtor['invoices_count'] ?? 0),
+                (string) ($debtor['overdue_days_max'] ?? 0),
             ];
 
             foreach ($allCurrencies as $currency) {
@@ -160,12 +115,6 @@ class DebtorsRenderer extends AbstractModuleRenderer
             $rows[] = $row;
         }
 
-        return $content . $this->theme->renderTable($headers, $rows, ['class' => 'table table-striped']);
+        return $this->markdownHeading(_('Top debtors'), 4) . $this->markdownTable($headers, $rows);
     }
 }
-
-// Create placeholder classes for other renderers to prevent errors
-class IncomingInvoicesRenderer extends GenericModuleRenderer {}
-class NewCustomersRenderer extends GenericModuleRenderer {}
-class BestSellersRenderer extends GenericModuleRenderer {}
-class WaitingPaymentsRenderer extends GenericModuleRenderer {}
