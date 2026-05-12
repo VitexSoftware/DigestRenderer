@@ -23,6 +23,7 @@ use VitexSoftware\DigestRenderer\Themes\EmailTheme;
 use VitexSoftware\DigestRenderer\Themes\GreenTheme;
 use VitexSoftware\DigestRenderer\Themes\NordicBlueTheme;
 use VitexSoftware\DigestRenderer\Themes\RainbowTheme;
+use VitexSoftware\DigestRenderer\Themes\VioletGardenTheme;
 use VitexSoftware\DigestRenderer\Themes\ThemeInterface;
 
 /**
@@ -89,6 +90,7 @@ class DigestRenderer
             'green' => new GreenTheme(),
             'rainbow' => new RainbowTheme(),
             'nordic-blue', 'nordic' => new NordicBlueTheme(),
+            'violet-garden', 'violet' => new VioletGardenTheme(),
             'bootstrap', 'default' => new BootstrapTheme(),
             default => throw new \InvalidArgumentException("Unknown theme: $themeName"),
         };
