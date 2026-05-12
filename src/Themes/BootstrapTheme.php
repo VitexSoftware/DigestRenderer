@@ -107,30 +107,37 @@ class BootstrapTheme extends AbstractTheme
             padding: 30px;
         }
         
-        .table {
+        table, .table {
             width: 100%;
             margin-bottom: 1rem;
             color: #212529;
             border-collapse: collapse;
         }
-        
-        .table th,
-        .table td {
+
+        table th, table td,
+        .table th, .table td {
             padding: 12px;
             vertical-align: top;
-            border-top: 1px solid #dee2e6;
+            border-bottom: 1px solid #e9ecef;
             text-align: left;
         }
-        
+
+        table thead th,
         .table thead th {
             vertical-align: bottom;
-            border-bottom: 2px solid #dee2e6;
+            border-bottom: 2px solid #ced4da;
             background-color: #f8f9fa;
             font-weight: 600;
         }
-        
+
+        table tbody tr:hover,
+        .table tbody tr:hover {
+            background-color: #f5f6f7;
+        }
+
+        table tbody tr:nth-of-type(odd),
         .table-striped tbody tr:nth-of-type(odd) {
-            background-color: rgba(0,0,0,0.05);
+            background-color: #fafafa;
         }
         
         .summary-grid {
