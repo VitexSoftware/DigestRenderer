@@ -29,17 +29,17 @@ class NordicBlueTheme extends AbstractTheme
     {
         return '
         :root {
-            --nb-navy:      #1a365d;
-            --nb-blue:      #2b6cb0;
-            --nb-mid:       #4299e1;
+            --nb-navy:      #2c5282;
+            --nb-blue:      #3182ce;
+            --nb-mid:       #63b3ed;
             --nb-light:     #ebf8ff;
             --nb-frost:     #f0f7ff;
-            --nb-ice:       #e2ecf7;
-            --nb-line:      #c5d9ee;
-            --nb-line-dark: #a0bcd8;
-            --nb-text:      #1a2e42;
-            --nb-muted:     #5a7a9a;
-            --nb-bg:        #f4f7fb;
+            --nb-ice:       #deeaf7;
+            --nb-line:      #cfe0f0;
+            --nb-line-dark: #a8c4df;
+            --nb-text:      #2d4050;
+            --nb-muted:     #6a8aaa;
+            --nb-bg:        #f5f8fc;
             --nb-white:     #ffffff;
             --nb-error:     #c53030;
             --nb-error-bg:  #fff5f5;
@@ -65,7 +65,7 @@ class NordicBlueTheme extends AbstractTheme
 
         /* ── Header ── */
         .digest-header {
-            background: var(--nb-navy);
+            background: linear-gradient(135deg, #3a6fa8 0%, #5b9bd5 60%, #7eb8e8 100%);
             border-radius: 10px 10px 0 0;
             padding: 32px 36px 28px;
             margin-bottom: 0;
@@ -172,13 +172,13 @@ class NordicBlueTheme extends AbstractTheme
 
         table thead th,
         .table thead th {
-            background: var(--nb-navy);
-            color: rgba(255,255,255,0.9);
-            font-weight: 600;
+            background: var(--nb-ice);
+            color: var(--nb-navy);
+            font-weight: 700;
             font-size: 0.78rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            border-bottom: 2px solid var(--nb-blue);
+            border-bottom: 2px solid var(--nb-mid);
         }
 
         table tbody tr:nth-of-type(even),
@@ -219,7 +219,7 @@ class NordicBlueTheme extends AbstractTheme
         .summary-item .value {
             font-size: 1.5rem;
             font-weight: 700;
-            color: var(--nb-navy);
+            color: var(--nb-blue);
             line-height: 1.2;
         }
 
