@@ -39,15 +39,29 @@ class MarkdownConverter
     private string $customCss;
 
     /**
+     * Extra HTML injected at the top of the header section
+     */
+    private string $headerExtra;
+
+    /**
+     * Extra HTML injected at the bottom of the footer section
+     */
+    private string $footerExtra;
+
+    /**
      * Constructor
      *
-     * @param ThemeInterface $theme     Theme for HTML wrapping
-     * @param string         $customCss Additional CSS styles
+     * @param ThemeInterface $theme       Theme for HTML wrapping
+     * @param string         $customCss   Additional CSS styles
+     * @param string         $headerExtra Extra HTML for the report header (logo, banner)
+     * @param string         $footerExtra Extra HTML for the report footer (app info)
      */
-    public function __construct(ThemeInterface $theme, string $customCss = '')
+    public function __construct(ThemeInterface $theme, string $customCss = '', string $headerExtra = '', string $footerExtra = '')
     {
         $this->theme = $theme;
         $this->customCss = $customCss;
+        $this->headerExtra = $headerExtra;
+        $this->footerExtra = $footerExtra;
     }
 
     /**
@@ -108,6 +122,7 @@ class MarkdownConverter
             </head>
             <body>
                 <div class="digest-header">
+                    {$this->headerExtra}
                     <h1>{$companyName}</h1>
                     {$header}
                 </div>
@@ -116,6 +131,7 @@ class MarkdownConverter
                 </div>
                 <div class="digest-footer">
                     {$footer}
+                    {$this->footerExtra}
                 </div>
             </body>
             </html>

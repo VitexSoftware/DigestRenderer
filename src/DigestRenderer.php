@@ -54,6 +54,16 @@ class DigestRenderer
     private string $customCss = '';
 
     /**
+     * Extra HTML injected into the report header (HTML/PDF only)
+     */
+    private string $headerExtra = '';
+
+    /**
+     * Extra HTML injected into the report footer (HTML/PDF only)
+     */
+    private string $footerExtra = '';
+
+    /**
      * Constructor
      *
      * @param ThemeInterface|null $theme Theme for HTML/PDF output (defaults to Bootstrap)
@@ -91,6 +101,34 @@ class DigestRenderer
     public function setCustomCss(string $css): self
     {
         $this->customCss = $css;
+
+        return $this;
+    }
+
+    /**
+     * Set extra HTML injected at the top of the report header.
+     * Use this to add an application logo, banner, or any branding markup.
+     *
+     * @param string $html Raw HTML (inline SVG, <img>, etc.)
+     * @return self
+     */
+    public function setHeaderExtra(string $html): self
+    {
+        $this->headerExtra = $html;
+
+        return $this;
+    }
+
+    /**
+     * Set extra HTML injected at the bottom of the report footer.
+     * Use this to add application name, version, and homepage link.
+     *
+     * @param string $html Raw HTML
+     * @return self
+     */
+    public function setFooterExtra(string $html): self
+    {
+        $this->footerExtra = $html;
 
         return $this;
     }
@@ -165,7 +203,7 @@ class DigestRenderer
      */
     private function convertToHtml(string $markdown, array $meta): string
     {
-        $converter = new MarkdownConverter($this->theme, $this->customCss);
+        $converter = new MarkdownConverter($this->theme, $this->customCss, $this->headerExtra, $this->footerExtra);
 
         return $converter->convert($markdown, $meta);
     }
