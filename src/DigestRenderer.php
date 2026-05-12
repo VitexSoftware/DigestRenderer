@@ -21,6 +21,7 @@ use VitexSoftware\DigestRenderer\Renderers\ModuleRendererFactory;
 use VitexSoftware\DigestRenderer\Themes\BootstrapTheme;
 use VitexSoftware\DigestRenderer\Themes\EmailTheme;
 use VitexSoftware\DigestRenderer\Themes\GreenTheme;
+use VitexSoftware\DigestRenderer\Themes\NordicBlueTheme;
 use VitexSoftware\DigestRenderer\Themes\RainbowTheme;
 use VitexSoftware\DigestRenderer\Themes\ThemeInterface;
 
@@ -87,6 +88,7 @@ class DigestRenderer
             'email' => new EmailTheme(),
             'green' => new GreenTheme(),
             'rainbow' => new RainbowTheme(),
+            'nordic-blue', 'nordic' => new NordicBlueTheme(),
             'bootstrap', 'default' => new BootstrapTheme(),
             default => throw new \InvalidArgumentException("Unknown theme: $themeName"),
         };
