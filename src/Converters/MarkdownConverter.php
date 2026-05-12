@@ -15,7 +15,7 @@ declare(strict_types=1);
 
 namespace VitexSoftware\DigestRenderer\Converters;
 
-use League\CommonMark\CommonMarkConverter;
+use League\CommonMark\GithubFlavoredMarkdownConverter;
 use VitexSoftware\DigestRenderer\Themes\ThemeInterface;
 
 /**
@@ -59,7 +59,7 @@ class MarkdownConverter
      */
     public function convert(string $markdown, array $meta = []): string
     {
-        $converter = new CommonMarkConverter();
+        $converter = new GithubFlavoredMarkdownConverter();
         $bodyHtml = $converter->convert($markdown)->getContent();
 
         return $this->wrapInHtmlDocument($bodyHtml, $meta);
