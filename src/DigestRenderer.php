@@ -20,6 +20,7 @@ use VitexSoftware\DigestRenderer\Converters\PdfConverter;
 use VitexSoftware\DigestRenderer\Renderers\ModuleRendererFactory;
 use VitexSoftware\DigestRenderer\Themes\BootstrapTheme;
 use VitexSoftware\DigestRenderer\Themes\EmailTheme;
+use VitexSoftware\DigestRenderer\Themes\GreenTheme;
 use VitexSoftware\DigestRenderer\Themes\ThemeInterface;
 
 /**
@@ -73,6 +74,7 @@ class DigestRenderer
     {
         $this->theme = match ($themeName) {
             'email' => new EmailTheme(),
+            'green' => new GreenTheme(),
             'bootstrap', 'default' => new BootstrapTheme(),
             default => throw new \InvalidArgumentException("Unknown theme: $themeName"),
         };
