@@ -6,6 +6,7 @@
 override_dh_auto_build:
 	# Generate Debian autoloader using phpab
 	phpabtpl --basedir src composer.json > debian/autoload.php.tpl
+	sed -i 's|League/Commonmark/|League/CommonMark/|g' debian/autoload.php.tpl
 	phpab --template debian/autoload.php.tpl --output src/autoload.php src/
 
 override_dh_install:
