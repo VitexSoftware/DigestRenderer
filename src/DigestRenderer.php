@@ -91,7 +91,7 @@ class DigestRenderer
             'rainbow' => new RainbowTheme(),
             'nordic-blue', 'nordic' => new NordicBlueTheme(),
             'violet-garden', 'violet' => new VioletGardenTheme(),
-            'bootstrap', 'default' => new BootstrapTheme(),
+            'bootstrap', 'default', 'happy' => new BootstrapTheme(),
             default => throw new \InvalidArgumentException("Unknown theme: $themeName"),
         };
 
