@@ -111,6 +111,12 @@ class MarkdownConverter
             date('Y-m-d H:i:s', strtotime($timestamp)),
         );
 
+        $dataSource = $this->buildDataSourceHtml($meta);
+
+        if ($dataSource !== '') {
+            $footer .= $dataSource;
+        }
+
         return <<<HTML
             <!DOCTYPE html>
             <html lang="en">
@@ -136,5 +142,36 @@ class MarkdownConverter
             </body>
             </html>
             HTML;
+    }
+
+    /**
+     * Build a footer line unambiguously identifying which AbraFlexi/Pohoda
+     * server (and company) the digest data was pulled from.
+     *
+     * @param array<string, mixed> $meta Digest metadata (provider/company block)
+     * @return string HTML snippet (empty if no source info is available)
+     */
+    private function buildDataSourceHtml(array $meta): string
+    {
+        $company = $meta['company'] ?? [];
+        $system = $company['system'] ?? $meta['provider'] ?? '';
+        $name = $company['name'] ?? '';
+        $identifier = $company['code'] ?? $company['ico'] ?? '';
+        $url = $company['url'] ?? $company['server_url'] ?? '';
+
+        if (!$system && !$name && !$url) {
+            return '';
+        }
+
+        $parts = array_filter([
+            $system,
+            $name,
+            $identifier !== '' ? "#{$identifier}" : '',
+        ], static fn ($part) => $part !== '' && $part !== null);
+
+        $label = htmlspecialchars(implode(' — ', $parts));
+        $link = $url !== '' ? sprintf(' — <a href="%s">%s</a>', htmlspecialchars($url), htmlspecialchars($url)) : '';
+
+        return sprintf('<p class="data-source"><small>%s: %s%s</small></p>', _('Data source'), $label, $link);
     }
 }

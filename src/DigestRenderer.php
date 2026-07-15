@@ -196,8 +196,38 @@ class DigestRenderer
         $timestamp = $digest['timestamp'] ?? date('c');
         $md .= "---\n";
         $md .= sprintf("*%s %s*\n", _('Generated on'), date('Y-m-d H:i:s', strtotime($timestamp)));
+        $md .= $this->renderDataSourceLine($digest);
 
         return $md;
+    }
+
+    /**
+     * Build a footer line unambiguously identifying which AbraFlexi/Pohoda
+     * server (and company) the digest data was pulled from.
+     *
+     * @param array<string, mixed> $digest Digest metadata (provider/company block)
+     * @return string Markdown line (empty if no source info is available)
+     */
+    private function renderDataSourceLine(array $digest): string
+    {
+        $company = $digest['company'] ?? [];
+        $system = $company['system'] ?? $digest['provider'] ?? '';
+        $name = $company['name'] ?? '';
+        $identifier = $company['code'] ?? $company['ico'] ?? '';
+        $url = $company['url'] ?? $company['server_url'] ?? '';
+
+        if (!$system && !$name && !$url) {
+            return '';
+        }
+
+        $parts = array_filter([
+            $system,
+            $name,
+            $identifier !== '' ? "#{$identifier}" : '',
+            $url,
+        ], static fn ($part) => $part !== '' && $part !== null);
+
+        return sprintf("*%s: %s*\n", _('Data source'), implode(' — ', $parts));
     }
 
     /**
