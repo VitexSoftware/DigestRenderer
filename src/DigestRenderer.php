@@ -150,25 +150,31 @@ class DigestRenderer
     {
         $this->validateDigestData($digestData);
 
-        $markdown = $this->renderMarkdown($digestData);
+        $digest = $digestData['digest'] ?? [];
+        $modules = $this->renderModulesMarkdown($digestData['modules'] ?? []);
+
+        if ($format === 'md') {
+            return $this->renderHeadingMarkdown($digest) . $modules . $this->renderFooterMarkdown($digest);
+        }
 
         return match ($format) {
-            'md' => $markdown,
-            'html' => $this->convertToHtml($markdown, $digestData['digest'] ?? []),
-            'pdf' => $this->convertToPdf($markdown, $digestData['digest'] ?? []),
+            // HTML/PDF reconstruct the heading and footer themselves (themed
+            // markup, logo, app info) — only the module bodies go through
+            // Markdown, otherwise the heading/period/footer end up duplicated.
+            'html' => $this->convertToHtml($modules, $digest),
+            'pdf' => $this->convertToPdf($modules, $digest),
             default => throw new \InvalidArgumentException("Unsupported format: $format"),
         };
     }
 
     /**
-     * Render all modules to a single Markdown document
+     * Render the title heading and period line.
      *
-     * @param array<string, mixed> $digestData Full digest data
-     * @return string Markdown document
+     * @param array<string, mixed> $digest Digest metadata
+     * @return string Markdown heading
      */
-    private function renderMarkdown(array $digestData): string
+    private function renderHeadingMarkdown(array $digest): string
     {
-        $digest = $digestData['digest'] ?? [];
         $companyName = $digest['company']['name'] ?? _('Digest Report');
         $periodStart = $digest['period']['start'] ?? '';
         $periodEnd = $digest['period']['end'] ?? '';
@@ -179,7 +185,18 @@ class DigestRenderer
             $md .= sprintf("%s: %s – %s\n\n", _('Period'), $periodStart, $periodEnd);
         }
 
-        $modules = $digestData['modules'] ?? [];
+        return $md;
+    }
+
+    /**
+     * Render all modules to Markdown.
+     *
+     * @param array<string, mixed> $modules Module data
+     * @return string Markdown document
+     */
+    private function renderModulesMarkdown(array $modules): string
+    {
+        $md = '';
 
         foreach ($modules as $moduleKey => $moduleData) {
             try {
@@ -193,8 +210,19 @@ class DigestRenderer
             }
         }
 
+        return $md;
+    }
+
+    /**
+     * Render the "generated on" / data source footer.
+     *
+     * @param array<string, mixed> $digest Digest metadata
+     * @return string Markdown footer
+     */
+    private function renderFooterMarkdown(array $digest): string
+    {
         $timestamp = $digest['timestamp'] ?? date('c');
-        $md .= "---\n";
+        $md = "---\n";
         $md .= sprintf("*%s %s*\n", _('Generated on'), date('Y-m-d H:i:s', strtotime($timestamp)));
         $md .= $this->renderDataSourceLine($digest);
 
