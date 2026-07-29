@@ -1,4 +1,6 @@
 # DigestRenderer
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+![Packaging: deb](https://img.shields.io/badge/packaging-.deb-red?logo=debian&logoColor=white)
 
 A standalone PHP library for rendering digest data as HTML reports and dashboards.
 
