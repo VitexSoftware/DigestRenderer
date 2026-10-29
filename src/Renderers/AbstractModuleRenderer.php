@@ -28,6 +28,11 @@ abstract class AbstractModuleRenderer implements ModuleRendererInterface
     protected string $moduleName = '';
 
     /**
+     * Maximum number of listed items per section (0 = unlimited)
+     */
+    protected int $itemLimit = 0;
+
+    /**
      * Constructor
      *
      * @param string $moduleName Module name (optional, auto-detected)
@@ -35,6 +40,18 @@ abstract class AbstractModuleRenderer implements ModuleRendererInterface
     public function __construct(string $moduleName = '')
     {
         $this->moduleName = $moduleName ?: $this->getModuleName();
+    }
+
+    /**
+     * Set maximum number of listed items per section.
+     *
+     * @param int $limit Maximum number of rows (0 = unlimited)
+     */
+    public function setItemLimit(int $limit): static
+    {
+        $this->itemLimit = max(0, $limit);
+
+        return $this;
     }
 
     /**
@@ -141,6 +158,28 @@ abstract class AbstractModuleRenderer implements ModuleRendererInterface
         }
 
         return $md . "\n";
+    }
+
+    /**
+     * Render a Markdown table of listed items, honouring the item limit.
+     *
+     * Only the displayed rows are cut; totals computed by modules stay intact.
+     *
+     * @param array<string>        $headers Column headers
+     * @param array<array<string>> $rows    Row data
+     */
+    protected function markdownItemsTable(array $headers, array $rows): string
+    {
+        $total = \count($rows);
+
+        if ($this->itemLimit > 0 && $total > $this->itemLimit) {
+            $rows = \array_slice($rows, 0, $this->itemLimit);
+
+            return $this->markdownTable($headers, $rows)
+                . '*' . sprintf(_('… and %d more items'), $total - $this->itemLimit) . "*\n\n";
+        }
+
+        return $this->markdownTable($headers, $rows);
     }
 
     /**

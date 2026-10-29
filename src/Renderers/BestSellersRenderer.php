@@ -33,7 +33,7 @@ class BestSellersRenderer extends AbstractModuleRenderer
                 ];
             }
 
-            $md .= $this->markdownTable($headers, $rows);
+            $md .= $this->markdownItemsTable($headers, $rows);
         }
 
         return $this->markdownSection($title, $md);

@@ -78,6 +78,18 @@ class DigestRenderer
     }
 
     /**
+     * Set maximum number of listed items in each module section
+     *
+     * @param int $limit Maximum number of rows (0 = unlimited)
+     */
+    public function setItemLimit(int $limit): self
+    {
+        $this->moduleFactory->setItemLimit($limit);
+
+        return $this;
+    }
+
+    /**
      * Set theme by name
      *
      * @param string $themeName Theme name (bootstrap, email)

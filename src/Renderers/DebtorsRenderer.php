@@ -115,6 +115,6 @@ class DebtorsRenderer extends AbstractModuleRenderer
             $rows[] = $row;
         }
 
-        return $this->markdownHeading(_('Top debtors'), 4) . $this->markdownTable($headers, $rows);
+        return $this->markdownHeading(_('Top debtors'), 4) . $this->markdownItemsTable($headers, $rows);
     }
 }

@@ -49,6 +49,23 @@ class ModuleRendererFactory
     ];
 
     /**
+     * Maximum number of listed items per section (0 = unlimited)
+     */
+    private int $itemLimit = 0;
+
+    /**
+     * Set item limit applied to every created renderer
+     *
+     * @param int $limit Maximum number of rows (0 = unlimited)
+     */
+    public function setItemLimit(int $limit): self
+    {
+        $this->itemLimit = max(0, $limit);
+
+        return $this;
+    }
+
+    /**
      * Create renderer for module
      *
      * @param string $moduleName Module name
@@ -59,7 +76,7 @@ class ModuleRendererFactory
     {
         if (!isset($this->rendererClasses[$moduleName])) {
             // Fall back to generic renderer
-            return new GenericModuleRenderer($moduleName);
+            return $this->applyItemLimit(new GenericModuleRenderer($moduleName));
         }
 
         $rendererClass = $this->rendererClasses[$moduleName];
@@ -68,7 +85,16 @@ class ModuleRendererFactory
             throw new \InvalidArgumentException("Renderer class not found: $rendererClass");
         }
 
-        return new $rendererClass();
+        return $this->applyItemLimit(new $rendererClass());
+    }
+
+    private function applyItemLimit(ModuleRendererInterface $renderer): ModuleRendererInterface
+    {
+        if ($renderer instanceof AbstractModuleRenderer) {
+            $renderer->setItemLimit($this->itemLimit);
+        }
+
+        return $renderer;
     }
 
     /**

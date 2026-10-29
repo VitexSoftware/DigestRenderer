@@ -49,7 +49,7 @@ class ContactListRenderer extends AbstractModuleRenderer
                 $rows[] = $row;
             }
 
-            $md .= $this->markdownTable($headers, $rows);
+            $md .= $this->markdownItemsTable($headers, $rows);
         }
 
         return $this->markdownSection($title, $md);

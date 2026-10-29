@@ -109,6 +109,6 @@ class GenericModuleRenderer extends AbstractModuleRenderer
             }
         }
 
-        return $this->markdownTable($headers, $rows);
+        return $this->markdownItemsTable($headers, $rows);
     }
 }
