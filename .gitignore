@@ -45,3 +45,9 @@ output/
 /debian/php-vitexsoftware-digest-renderer/
 /debian/.debhelper/
 /debian/*.debhelper.log
+
+# dpkg-buildpackage output
+/debian/debhelper-build-stamp
+/debian/files
+/debian/*.substvars
+/debian/autoload.php.tpl
