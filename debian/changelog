@@ -1,3 +1,13 @@
+php-vitexsoftware-digest-renderer (1.1.0) unstable; urgency=medium
+
+  * Item limit: DigestRenderer::setItemLimit() caps the number of listed
+    rows per section, totals stay intact
+  * Czech localization: new I18n class with plural-aware translations
+    and cs_CZ catalog
+  * Ignore build artifacts
+
+ -- Vítězslav Dvořák <info@vitexsoftware.cz>  Thu, 29 Oct 2026 14:54:31 +0100
+
 php-vitexsoftware-digest-renderer (1.0.0) unstable; urgency=medium
 
   * Initial release
