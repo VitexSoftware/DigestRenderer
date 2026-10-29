@@ -15,6 +15,8 @@ declare(strict_types=1);
 
 namespace VitexSoftware\DigestRenderer\Renderers;
 
+use VitexSoftware\DigestRenderer\I18n;
+
 /**
  * Abstract base module renderer — produces Markdown output
  *
@@ -102,7 +104,7 @@ abstract class AbstractModuleRenderer implements ModuleRendererInterface
         $error = $moduleData['error'] ?? $moduleData['metadata']['error'] ?? [];
         $message = is_string($error) ? $error : ($error['message'] ?? 'Unknown error occurred');
 
-        return $this->markdownHeading($title, 2) . "\n> **" . _('Error') . ":** $message\n";
+        return $this->markdownHeading($title, 2) . "\n> **" . I18n::t('Error') . ":** $message\n";
     }
 
     /**
@@ -176,7 +178,7 @@ abstract class AbstractModuleRenderer implements ModuleRendererInterface
             $rows = \array_slice($rows, 0, $this->itemLimit);
 
             return $this->markdownTable($headers, $rows)
-                . '*' . sprintf(_('… and %d more items'), $total - $this->itemLimit) . "*\n\n";
+                . '*' . sprintf(I18n::n('… and %d more item', '… and %d more items', $total - $this->itemLimit), $total - $this->itemLimit) . "*\n\n";
         }
 
         return $this->markdownTable($headers, $rows);

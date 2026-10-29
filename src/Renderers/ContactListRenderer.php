@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace VitexSoftware\DigestRenderer\Renderers;
 
+use VitexSoftware\DigestRenderer\I18n;
+
 /**
  * Base renderer for contact-list modules (WithoutEmail, WithoutTel, NewCustomers)
  *
@@ -25,8 +27,8 @@ class ContactListRenderer extends AbstractModuleRenderer
         $data = $moduleData['data'] ?? [];
         $summary = $data['summary'] ?? [];
 
-        $md = $this->markdownSummary(_('Summary'), [
-            _('Total') => $summary['total_count'] ?? 0,
+        $md = $this->markdownSummary(I18n::t('Summary'), [
+            I18n::t('Total') => $summary['total_count'] ?? 0,
         ]);
 
         $items = $data[$this->listKey] ?? [];
@@ -34,7 +36,7 @@ class ContactListRenderer extends AbstractModuleRenderer
         if (!empty($items)) {
             $firstItem = reset($items);
             $headers = array_map(
-                static fn (string $k) => _(ucwords(str_replace('_', ' ', $k))),
+                static fn (string $k) => I18n::t(ucwords(str_replace('_', ' ', $k))),
                 array_keys($firstItem),
             );
             $rows = [];

@@ -15,6 +15,8 @@ declare(strict_types=1);
 
 namespace VitexSoftware\DigestRenderer\Renderers;
 
+use VitexSoftware\DigestRenderer\I18n;
+
 /**
  * Base renderer for modules that display currency totals
  *
@@ -34,12 +36,12 @@ class CurrencyTotalsRenderer extends AbstractModuleRenderer
         $data = $moduleData['data'] ?? [];
         $summary = $data['summary'] ?? [];
 
-        $md = $this->markdownSummary(_('Summary'), [
-            _('Total count') => $summary['total_count'] ?? 0,
+        $md = $this->markdownSummary(I18n::t('Summary'), [
+            I18n::t('Total count') => $summary['total_count'] ?? 0,
         ]);
 
         if (!empty($data['totals_by_currency'])) {
-            $headers = [_('Currency'), _('Amount')];
+            $headers = [I18n::t('Currency'), I18n::t('Amount')];
             $rows = [];
 
             foreach ($data['totals_by_currency'] as $currency => $currencyData) {

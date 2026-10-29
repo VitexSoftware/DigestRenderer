@@ -15,6 +15,8 @@ declare(strict_types=1);
 
 namespace VitexSoftware\DigestRenderer\Renderers;
 
+use VitexSoftware\DigestRenderer\I18n;
+
 /**
  * Debtors module renderer
  *
@@ -27,16 +29,16 @@ class DebtorsRenderer extends AbstractModuleRenderer
      */
     protected function renderSuccess(array $moduleData): string
     {
-        $title = $moduleData['heading'] ?? _('Debtors');
+        $title = $moduleData['heading'] ?? I18n::t('Debtors');
         $data = $moduleData['data'] ?? [];
 
         $md = '';
 
         if (isset($data['summary'])) {
-            $md .= $this->markdownSummary(_('Debtor summary'), [
-                _('Total debtors') => $data['summary']['total_debtors'] ?? 0,
-                _('Total invoices') => $data['summary']['total_invoices'] ?? 0,
-                _('Currencies') => is_array($data['summary']['currencies'] ?? null)
+            $md .= $this->markdownSummary(I18n::t('Debtor summary'), [
+                I18n::t('Total debtors') => $data['summary']['total_debtors'] ?? 0,
+                I18n::t('Total invoices') => $data['summary']['total_invoices'] ?? 0,
+                I18n::t('Currencies') => is_array($data['summary']['currencies'] ?? null)
                     ? implode(', ', $data['summary']['currencies']) : 'N/A',
             ]);
         }
@@ -48,19 +50,19 @@ class DebtorsRenderer extends AbstractModuleRenderer
                 $rows[] = [$currency, $this->formatCurrency($currencyData)];
             }
 
-            $md .= $this->markdownHeading(_('Outstanding amounts'), 4);
-            $md .= $this->markdownTable([_('Currency'), _('Amount')], $rows);
+            $md .= $this->markdownHeading(I18n::t('Outstanding amounts'), 4);
+            $md .= $this->markdownTable([I18n::t('Currency'), I18n::t('Amount')], $rows);
         }
 
         if (isset($data['overdue_ranges'])) {
             $rows = [];
 
             foreach ($data['overdue_ranges'] as $range => $count) {
-                $rows[] = [$range . ' ' . _('days'), (string) $count];
+                $rows[] = [$range . ' ' . I18n::t('days'), (string) $count];
             }
 
-            $md .= $this->markdownHeading(_('Invoices by overdue period'), 4);
-            $md .= $this->markdownTable([_('Overdue period'), _('Number of invoices')], $rows);
+            $md .= $this->markdownHeading(I18n::t('Invoices by overdue period'), 4);
+            $md .= $this->markdownTable([I18n::t('Overdue period'), I18n::t('Number of invoices')], $rows);
         }
 
         if (isset($data['top_debtors'])) {
@@ -79,10 +81,10 @@ class DebtorsRenderer extends AbstractModuleRenderer
     private function renderTopDebtors(array $topDebtors): string
     {
         if (empty($topDebtors)) {
-            return $this->markdownHeading(_('Top debtors'), 4) . _('No debtors data available') . "\n\n";
+            return $this->markdownHeading(I18n::t('Top debtors'), 4) . I18n::t('No debtors data available') . "\n\n";
         }
 
-        $headers = [_('Company'), _('Invoices count'), _('Max overdue days')];
+        $headers = [I18n::t('Company'), I18n::t('Invoices count'), I18n::t('Max overdue days')];
 
         $allCurrencies = [];
 
@@ -95,14 +97,14 @@ class DebtorsRenderer extends AbstractModuleRenderer
         $allCurrencies = array_unique($allCurrencies);
 
         foreach ($allCurrencies as $currency) {
-            $headers[] = sprintf(_('Amount') . ' (%s)', $currency);
+            $headers[] = sprintf(I18n::t('Amount') . ' (%s)', $currency);
         }
 
         $rows = [];
 
         foreach ($topDebtors as $debtor) {
             $row = [
-                $debtor['company'] ?? _('Unknown'),
+                $debtor['company'] ?? I18n::t('Unknown'),
                 (string) ($debtor['invoices_count'] ?? 0),
                 (string) ($debtor['overdue_days_max'] ?? 0),
             ];
@@ -115,6 +117,6 @@ class DebtorsRenderer extends AbstractModuleRenderer
             $rows[] = $row;
         }
 
-        return $this->markdownHeading(_('Top debtors'), 4) . $this->markdownItemsTable($headers, $rows);
+        return $this->markdownHeading(I18n::t('Top debtors'), 4) . $this->markdownItemsTable($headers, $rows);
     }
 }

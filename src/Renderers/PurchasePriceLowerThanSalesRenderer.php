@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace VitexSoftware\DigestRenderer\Renderers;
 
+use VitexSoftware\DigestRenderer\I18n;
+
 /**
  * Purchase price lower than sales price renderer
  *
@@ -13,16 +15,16 @@ class PurchasePriceLowerThanSalesRenderer extends AbstractModuleRenderer
 {
     protected function renderSuccess(array $moduleData): string
     {
-        $title = $moduleData['heading'] ?? _('Product purchase price lower than sales');
+        $title = $moduleData['heading'] ?? I18n::t('Product purchase price lower than sales');
         $data = $moduleData['data'] ?? [];
         $products = $data['products'] ?? [];
 
-        $md = $this->markdownSummary(_('Summary'), [
-            _('Disadvantageous products') => $data['summary']['total_count'] ?? 0,
+        $md = $this->markdownSummary(I18n::t('Summary'), [
+            I18n::t('Disadvantageous products') => $data['summary']['total_count'] ?? 0,
         ]);
 
         if (!empty($products)) {
-            $headers = [_('Code'), _('Name'), _('Buy'), _('Sell'), _('Difference')];
+            $headers = [I18n::t('Code'), I18n::t('Name'), I18n::t('Buy'), I18n::t('Sell'), I18n::t('Difference')];
             $rows = [];
 
             foreach ($products as $product) {

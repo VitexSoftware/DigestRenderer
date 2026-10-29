@@ -15,6 +15,8 @@ declare(strict_types=1);
 
 namespace VitexSoftware\DigestRenderer\Renderers;
 
+use VitexSoftware\DigestRenderer\I18n;
+
 /**
  * Outcoming invoices module renderer
  *
@@ -27,19 +29,19 @@ class OutcomingInvoicesRenderer extends AbstractModuleRenderer
      */
     protected function renderSuccess(array $moduleData): string
     {
-        $title = $moduleData['heading'] ?? _('Outcoming invoices');
+        $title = $moduleData['heading'] ?? I18n::t('Outcoming invoices');
         $data = $moduleData['data'] ?? [];
 
         $md = '';
 
         if (isset($data['summary'])) {
             $summary = $data['summary'];
-            $md .= $this->markdownSummary(_('Invoice summary'), [
-                _('Total invoices') => $summary['total_count'] ?? 0,
-                _('Active invoices') => $summary['active_count'] ?? 0,
-                _('Cancelled invoices') => $summary['cancelled_count'] ?? 0,
-                _('Document types') => $summary['document_types_count'] ?? 0,
-                _('Currencies') => is_array($summary['currencies'] ?? null)
+            $md .= $this->markdownSummary(I18n::t('Invoice summary'), [
+                I18n::t('Total invoices') => $summary['total_count'] ?? 0,
+                I18n::t('Active invoices') => $summary['active_count'] ?? 0,
+                I18n::t('Cancelled invoices') => $summary['cancelled_count'] ?? 0,
+                I18n::t('Document types') => $summary['document_types_count'] ?? 0,
+                I18n::t('Currencies') => is_array($summary['currencies'] ?? null)
                     ? implode(', ', $summary['currencies']) : 'N/A',
             ]);
         }
@@ -51,8 +53,8 @@ class OutcomingInvoicesRenderer extends AbstractModuleRenderer
                 $rows[] = [$currency, $this->formatCurrency($currencyData)];
             }
 
-            $md .= $this->markdownHeading(_('Totals by currency'), 4);
-            $md .= $this->markdownTable([_('Currency'), _('Amount')], $rows);
+            $md .= $this->markdownHeading(I18n::t('Totals by currency'), 4);
+            $md .= $this->markdownTable([I18n::t('Currency'), I18n::t('Amount')], $rows);
         }
 
         if (isset($data['by_document_type'])) {
@@ -70,7 +72,7 @@ class OutcomingInvoicesRenderer extends AbstractModuleRenderer
      */
     private function renderDocumentTypeBreakdown(array $docTypes): string
     {
-        $headers = [_('Document type'), _('Count')];
+        $headers = [I18n::t('Document type'), I18n::t('Count')];
 
         $allCurrencies = [];
 
@@ -83,7 +85,7 @@ class OutcomingInvoicesRenderer extends AbstractModuleRenderer
         $allCurrencies = array_unique($allCurrencies);
 
         foreach ($allCurrencies as $currency) {
-            $headers[] = sprintf(_('Total') . ' (%s)', $currency);
+            $headers[] = sprintf(I18n::t('Total') . ' (%s)', $currency);
         }
 
         $rows = [];
@@ -102,7 +104,7 @@ class OutcomingInvoicesRenderer extends AbstractModuleRenderer
             $rows[] = $row;
         }
 
-        return $this->markdownHeading(_('Breakdown by document type'), 4)
+        return $this->markdownHeading(I18n::t('Breakdown by document type'), 4)
             . $this->markdownTable($headers, $rows);
     }
 }

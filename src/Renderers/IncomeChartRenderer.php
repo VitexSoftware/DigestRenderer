@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace VitexSoftware\DigestRenderer\Renderers;
 
+use VitexSoftware\DigestRenderer\I18n;
+
 /**
  * Income chart renderer for daily/weekly income visualization
  *
@@ -26,13 +28,13 @@ class IncomeChartRenderer extends AbstractModuleRenderer
      */
     protected function renderSuccess(array $moduleData): string
     {
-        $title = $moduleData['heading'] ?? _('Incoming payments chart');
+        $title = $moduleData['heading'] ?? I18n::t('Incoming payments chart');
         $data = $moduleData['data'] ?? [];
         $days = $data['days'] ?? [];
         $averages = $data['averages'] ?? [];
 
         if (empty($days)) {
-            return $this->markdownSection($title, _('No data available') . "\n");
+            return $this->markdownSection($title, I18n::t('No data available') . "\n");
         }
 
         $md = '';
@@ -41,7 +43,7 @@ class IncomeChartRenderer extends AbstractModuleRenderer
         foreach ($averages as $currency => $avgData) {
             $md .= sprintf(
                 "100%% — %s: %s %s  \n",
-                _('average income is'),
+                I18n::t('average income is'),
                 number_format((float) ($avgData['average'] ?? 0), 0, ',', ' '),
                 $currency,
             );
@@ -50,7 +52,7 @@ class IncomeChartRenderer extends AbstractModuleRenderer
         $md .= "\n";
 
         // ASCII bar chart as Markdown table
-        $headers = [_('Date'), _('Currency'), _('Amount'), _('% avg'), _('Bar')];
+        $headers = [I18n::t('Date'), I18n::t('Currency'), I18n::t('Amount'), I18n::t('% avg'), I18n::t('Bar')];
         $rows = [];
 
         foreach (array_reverse($days) as $dayData) {

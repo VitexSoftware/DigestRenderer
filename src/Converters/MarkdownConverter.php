@@ -15,6 +15,8 @@ declare(strict_types=1);
 
 namespace VitexSoftware\DigestRenderer\Converters;
 
+use VitexSoftware\DigestRenderer\I18n;
+
 use League\CommonMark\GithubFlavoredMarkdownConverter;
 use VitexSoftware\DigestRenderer\Themes\ThemeInterface;
 
@@ -88,7 +90,7 @@ class MarkdownConverter
      */
     private function wrapInHtmlDocument(string $bodyHtml, array $meta): string
     {
-        $companyName = $meta['company']['name'] ?? _('Digest Report');
+        $companyName = $meta['company']['name'] ?? I18n::t('Digest Report');
         $periodStart = $meta['period']['start'] ?? '';
         $periodEnd = $meta['period']['end'] ?? '';
         $timestamp = $meta['timestamp'] ?? date('c');
@@ -99,7 +101,7 @@ class MarkdownConverter
         if ($periodStart && $periodEnd) {
             $header = sprintf(
                 '<p class="period">%s: %s – %s</p>',
-                _('Period'),
+                I18n::t('Period'),
                 htmlspecialchars($periodStart),
                 htmlspecialchars($periodEnd),
             );
@@ -107,7 +109,7 @@ class MarkdownConverter
 
         $footer = sprintf(
             '<p><small>%s %s</small></p>',
-            _('Generated on'),
+            I18n::t('Generated on'),
             date('Y-m-d H:i:s', strtotime($timestamp)),
         );
 
@@ -172,6 +174,6 @@ class MarkdownConverter
         $label = htmlspecialchars(implode(' — ', $parts));
         $link = $url !== '' ? sprintf(' — <a href="%s">%s</a>', htmlspecialchars($url), htmlspecialchars($url)) : '';
 
-        return sprintf('<p class="data-source"><small>%s: %s%s</small></p>', _('Data source'), $label, $link);
+        return sprintf('<p class="data-source"><small>%s: %s%s</small></p>', I18n::t('Data source'), $label, $link);
     }
 }

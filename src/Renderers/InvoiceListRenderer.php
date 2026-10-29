@@ -15,6 +15,8 @@ declare(strict_types=1);
 
 namespace VitexSoftware\DigestRenderer\Renderers;
 
+use VitexSoftware\DigestRenderer\I18n;
+
 /**
  * Base renderer for modules that display a list of invoices with totals
  *
@@ -39,24 +41,24 @@ class InvoiceListRenderer extends AbstractModuleRenderer
         $summary = $data['summary'] ?? [];
 
         // Summary
-        $summaryItems = [_('Count') => $summary['total_count'] ?? 0];
+        $summaryItems = [I18n::t('Count') => $summary['total_count'] ?? 0];
 
         if (isset($summary['total_amount'])) {
-            $summaryItems[_('Total amount')] = $this->formatCurrency($summary['total_amount']);
+            $summaryItems[I18n::t('Total amount')] = $this->formatCurrency($summary['total_amount']);
         }
 
-        $md = $this->markdownSummary(_('Summary'), $summaryItems);
+        $md = $this->markdownSummary(I18n::t('Summary'), $summaryItems);
 
         // Currency totals
         if (!empty($data['totals_by_currency'])) {
-            $headers = [_('Currency'), _('Amount')];
+            $headers = [I18n::t('Currency'), I18n::t('Amount')];
             $rows = [];
 
             foreach ($data['totals_by_currency'] as $currency => $currencyData) {
                 $rows[] = [$currency, $this->formatCurrency($currencyData)];
             }
 
-            $md .= $this->markdownHeading(_('Totals by currency'), 4);
+            $md .= $this->markdownHeading(I18n::t('Totals by currency'), 4);
             $md .= $this->markdownTable($headers, $rows);
         }
 
@@ -66,7 +68,7 @@ class InvoiceListRenderer extends AbstractModuleRenderer
         if (!empty($items)) {
             $firstItem = reset($items);
             $headers = array_map(
-                static fn (string $k) => _(ucwords(str_replace('_', ' ', $k))),
+                static fn (string $k) => I18n::t(ucwords(str_replace('_', ' ', $k))),
                 array_keys($firstItem),
             );
             $rows = [];

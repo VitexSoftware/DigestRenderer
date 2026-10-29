@@ -1,0 +1,257 @@
+# Czech translation of php-vitexsoftware-digest-renderer.
+# Copyright (C) VitexSoftware
+msgid ""
+msgstr ""
+"Project-Id-Version: php-vitexsoftware-digest-renderer\n"
+"Language: cs_CZ\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+
+msgid "Digest Report"
+msgstr "Přehled"
+
+msgid "Period"
+msgstr "Období"
+
+msgid "Generated on"
+msgstr "Vygenerováno"
+
+msgid "Data source"
+msgstr "Zdroj dat"
+
+msgid "Error"
+msgstr "Chyba"
+
+msgid "… and %d more item"
+msgid_plural "… and %d more items"
+msgstr[0] "… a další %d položka"
+msgstr[1] "… a další %d položky"
+msgstr[2] "… a dalších %d položek"
+
+msgid "Best selling products"
+msgstr "Nejprodávanější produkty"
+
+msgid "Summary"
+msgstr "Souhrn"
+
+msgid "Products"
+msgstr "Produkty"
+
+msgid "Product"
+msgstr "Produkt"
+
+msgid "Quantity"
+msgstr "Množství"
+
+msgid "Total"
+msgstr "Celkem"
+
+msgid "Total count"
+msgstr "Celkový počet"
+
+msgid "Currency"
+msgstr "Měna"
+
+msgid "Amount"
+msgstr "Částka"
+
+msgid "Debtors"
+msgstr "Dlužníci"
+
+msgid "Debtor summary"
+msgstr "Souhrn dlužníků"
+
+msgid "Total debtors"
+msgstr "Počet dlužníků"
+
+msgid "Total invoices"
+msgstr "Počet faktur"
+
+msgid "Currencies"
+msgstr "Měny"
+
+msgid "Outstanding amounts"
+msgstr "Neuhrazené částky"
+
+msgid "days"
+msgstr "dnů"
+
+msgid "Invoices by overdue period"
+msgstr "Faktury podle doby po splatnosti"
+
+msgid "Overdue period"
+msgstr "Doba po splatnosti"
+
+msgid "Number of invoices"
+msgstr "Počet faktur"
+
+msgid "Top debtors"
+msgstr "Největší dlužníci"
+
+msgid "No debtors data available"
+msgstr "Nejsou k dispozici data o dlužnících"
+
+msgid "Company"
+msgstr "Firma"
+
+msgid "Invoices count"
+msgstr "Počet faktur"
+
+msgid "Max overdue days"
+msgstr "Max. dnů po splatnosti"
+
+msgid "Unknown"
+msgstr "Neznámý"
+
+msgid "No data available"
+msgstr "Nejsou k dispozici žádná data"
+
+msgid "Invalid data format"
+msgstr "Neplatný formát dat"
+
+msgid "Incoming payments chart"
+msgstr "Graf příchozích plateb"
+
+msgid "average income is"
+msgstr "průměrný příjem je"
+
+msgid "Date"
+msgstr "Datum"
+
+msgid "% avg"
+msgstr "% prům."
+
+msgid "Bar"
+msgstr "Sloupec"
+
+msgid "Incoming invoices"
+msgstr "Přijaté faktury"
+
+msgid "Active"
+msgstr "Aktivní"
+
+msgid "Cancelled"
+msgstr "Stornované"
+
+msgid "Count"
+msgstr "Počet"
+
+msgid "Type"
+msgstr "Typ"
+
+msgid "Total amount"
+msgstr "Celková částka"
+
+msgid "Totals by currency"
+msgstr "Součty podle měn"
+
+msgid "Outcoming invoices"
+msgstr "Vydané faktury"
+
+msgid "Invoice summary"
+msgstr "Souhrn faktur"
+
+msgid "Active invoices"
+msgstr "Aktivní faktury"
+
+msgid "Cancelled invoices"
+msgstr "Stornované faktury"
+
+msgid "Document types"
+msgstr "Typy dokladů"
+
+msgid "Document type"
+msgstr "Typ dokladu"
+
+msgid "Breakdown by document type"
+msgstr "Rozdělení podle typu dokladu"
+
+msgid "Product purchase price lower than sales"
+msgstr "Nákupní cena produktu nižší než prodejní"
+
+msgid "Disadvantageous products"
+msgstr "Nevýhodné produkty"
+
+msgid "Code"
+msgstr "Kód"
+
+msgid "Name"
+msgstr "Název"
+
+msgid "Buy"
+msgstr "Nákup"
+
+msgid "Sell"
+msgstr "Prodej"
+
+msgid "Difference"
+msgstr "Rozdíl"
+
+msgid "Description"
+msgstr "Popis"
+
+msgid "Street"
+msgstr "Ulice"
+
+msgid "City"
+msgstr "Město"
+
+msgid "Phone"
+msgstr "Telefon"
+
+msgid "Email"
+msgstr "E-mail"
+
+msgid "Remaining"
+msgstr "Zbývá"
+
+msgid "Due Date"
+msgstr "Splatnost"
+
+msgid "Mail Status"
+msgstr "Stav e-mailu"
+
+msgid "Deduction Status"
+msgstr "Stav odpočtu"
+
+msgid "Contact Email"
+msgstr "Kontaktní e-mail"
+
+msgid "Bank Account"
+msgstr "Bankovní účet"
+
+msgid "Position"
+msgstr "Pozice"
+
+msgid "First Reminder"
+msgstr "První upomínka"
+
+msgid "Second Reminder"
+msgstr "Druhá upomínka"
+
+msgid "Pre Litigation"
+msgstr "Předžalobní výzva"
+
+msgid "Total Amount"
+msgstr "Celková částka"
+
+msgid "Cancelled Count"
+msgstr "Počet stornovaných"
+
+msgid "Active Count"
+msgstr "Počet aktivních"
+
+msgid "Document Type"
+msgstr "Typ dokladu"
+
+msgid "Invoice"
+msgstr "Faktura"
+
+msgid "Variable Symbol"
+msgstr "Variabilní symbol"
+
+msgid "Bank Account Number"
+msgstr "Číslo účtu"
+

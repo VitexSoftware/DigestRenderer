@@ -2,7 +2,7 @@ Source: php-vitexsoftware-digest-renderer
 Section: web
 Priority: optional
 Maintainer: Vítězslav Dvořák <info@vitexsoftware.cz>
-Build-Depends: debhelper-compat (= 13), pkg-php-tools, phpab
+Build-Depends: debhelper-compat (= 13), pkg-php-tools, gettext, phpab
 Standards-Version: 4.1.2
 Homepage: https://github.com/VitexSoftware/DigestRenderer
 

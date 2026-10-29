@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace VitexSoftware\DigestRenderer\Renderers;
 
+use VitexSoftware\DigestRenderer\I18n;
+
 /**
  * Best sellers module renderer
  *
@@ -13,16 +15,16 @@ class BestSellersRenderer extends AbstractModuleRenderer
 {
     protected function renderSuccess(array $moduleData): string
     {
-        $title = $moduleData['heading'] ?? _('Best selling products');
+        $title = $moduleData['heading'] ?? I18n::t('Best selling products');
         $data = $moduleData['data'] ?? [];
         $products = $data['products'] ?? [];
 
-        $md = $this->markdownSummary(_('Summary'), [
-            _('Products') => $data['summary']['total_products'] ?? 0,
+        $md = $this->markdownSummary(I18n::t('Summary'), [
+            I18n::t('Products') => $data['summary']['total_products'] ?? 0,
         ]);
 
         if (!empty($products)) {
-            $headers = [_('Product'), _('Quantity'), _('Total')];
+            $headers = [I18n::t('Product'), I18n::t('Quantity'), I18n::t('Total')];
             $rows = [];
 
             foreach ($products as $product) {

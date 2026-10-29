@@ -15,6 +15,8 @@ declare(strict_types=1);
 
 namespace VitexSoftware\DigestRenderer\Renderers;
 
+use VitexSoftware\DigestRenderer\I18n;
+
 /**
  * Generic module renderer for unknown module types
  *
@@ -34,7 +36,7 @@ class GenericModuleRenderer extends AbstractModuleRenderer
 
         // Render summary if available
         if (isset($data['summary'])) {
-            $md .= $this->markdownSummary(_('Summary'), $data['summary']);
+            $md .= $this->markdownSummary(I18n::t('Summary'), $data['summary']);
         }
 
         // Render other data sections
@@ -43,7 +45,7 @@ class GenericModuleRenderer extends AbstractModuleRenderer
                 continue;
             }
 
-            $sectionTitle = _(ucwords(str_replace('_', ' ', $key)));
+            $sectionTitle = I18n::t(ucwords(str_replace('_', ' ', $key)));
 
             if (is_array($value) && $this->isTableData($value)) {
                 $md .= $this->markdownHeading($sectionTitle, 4);
@@ -84,13 +86,13 @@ class GenericModuleRenderer extends AbstractModuleRenderer
     private function renderTableFromArray(array $data): string
     {
         if (empty($data)) {
-            return _('No data available') . "\n\n";
+            return I18n::t('No data available') . "\n\n";
         }
 
         $firstRow = reset($data);
 
         if (!is_array($firstRow)) {
-            return _('Invalid data format') . "\n\n";
+            return I18n::t('Invalid data format') . "\n\n";
         }
 
         $headers = array_keys($firstRow);

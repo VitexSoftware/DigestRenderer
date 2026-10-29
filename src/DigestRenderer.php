@@ -187,14 +187,14 @@ class DigestRenderer
      */
     private function renderHeadingMarkdown(array $digest): string
     {
-        $companyName = $digest['company']['name'] ?? _('Digest Report');
+        $companyName = $digest['company']['name'] ?? I18n::t('Digest Report');
         $periodStart = $digest['period']['start'] ?? '';
         $periodEnd = $digest['period']['end'] ?? '';
 
         $md = "# $companyName\n";
 
         if ($periodStart && $periodEnd) {
-            $md .= sprintf("%s: %s – %s\n\n", _('Period'), $periodStart, $periodEnd);
+            $md .= sprintf("%s: %s – %s\n\n", I18n::t('Period'), $periodStart, $periodEnd);
         }
 
         return $md;
@@ -218,7 +218,7 @@ class DigestRenderer
 
                 $md .= $renderer->render($moduleData);
             } catch (\Throwable $e) {
-                $md .= "## $moduleKey\n\n> **" . _('Error') . ":** {$e->getMessage()}\n\n";
+                $md .= "## $moduleKey\n\n> **" . I18n::t('Error') . ":** {$e->getMessage()}\n\n";
             }
         }
 
@@ -235,7 +235,7 @@ class DigestRenderer
     {
         $timestamp = $digest['timestamp'] ?? date('c');
         $md = "---\n";
-        $md .= sprintf("*%s %s*\n", _('Generated on'), date('Y-m-d H:i:s', strtotime($timestamp)));
+        $md .= sprintf("*%s %s*\n", I18n::t('Generated on'), date('Y-m-d H:i:s', strtotime($timestamp)));
         $md .= $this->renderDataSourceLine($digest);
 
         return $md;
@@ -267,7 +267,7 @@ class DigestRenderer
             $url,
         ], static fn ($part) => $part !== '' && $part !== null);
 
-        return sprintf("*%s: %s*\n", _('Data source'), implode(' — ', $parts));
+        return sprintf("*%s: %s*\n", I18n::t('Data source'), implode(' — ', $parts));
     }
 
     /**
