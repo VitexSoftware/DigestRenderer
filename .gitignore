@@ -40,3 +40,8 @@ phpunit.xml
 # Generated HTML files
 *.html
 output/
+# Build artifacts
+/src/autoload.php
+/debian/php-vitexsoftware-digest-renderer/
+/debian/.debhelper/
+/debian/*.debhelper.log
