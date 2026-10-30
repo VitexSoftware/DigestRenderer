@@ -24,11 +24,14 @@ msgstr "Zdroj dat"
 msgid "Error"
 msgstr "Chyba"
 
-msgid "… and %d more item"
-msgid_plural "… and %d more items"
-msgstr[0] "… a další %d položka"
-msgstr[1] "… a další %d položky"
-msgstr[2] "… a dalších %d položek"
+msgid "… %d more item not shown"
+msgid_plural "… %d more items not shown"
+msgstr[0] "… další %d položka není zobrazena"
+msgstr[1] "… další %d položky nejsou zobrazeny"
+msgstr[2] "… dalších %d není zobrazeno"
+
+msgid "first %d"
+msgstr "prvních %d"
 
 msgid "Best selling products"
 msgstr "Nejprodávanější produkty"
@@ -147,7 +150,7 @@ msgstr "Celková částka"
 msgid "Totals by currency"
 msgstr "Součty podle měn"
 
-msgid "Outcoming invoices"
+msgid "Outgoing invoices"
 msgstr "Vydané faktury"
 
 msgid "Invoice summary"

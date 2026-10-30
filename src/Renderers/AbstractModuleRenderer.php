@@ -177,11 +177,34 @@ abstract class AbstractModuleRenderer implements ModuleRendererInterface
         if ($this->itemLimit > 0 && $total > $this->itemLimit) {
             $rows = \array_slice($rows, 0, $this->itemLimit);
 
-            return $this->markdownTable($headers, $rows)
-                . '*' . sprintf(I18n::n('… and %d more item', '… and %d more items', $total - $this->itemLimit), $total - $this->itemLimit) . "*\n\n";
+            return $this->markdownTable($headers, $rows) . $this->notShownNote($total - $this->itemLimit);
         }
 
         return $this->markdownTable($headers, $rows);
+    }
+
+    /**
+     * Title of a truncated list, e.g. "Top debtors (first 20)".
+     *
+     * @param string $title Base title
+     * @param int    $shown Number of listed items
+     * @param int    $total Number of all items
+     */
+    protected function limitedTitle(string $title, int $shown, int $total): string
+    {
+        return $shown < $total
+            ? $title . ' (' . sprintf(I18n::t('first %d'), $shown) . ')'
+            : $title;
+    }
+
+    /**
+     * Closing note of a truncated list, e.g. "… 35 more not shown".
+     *
+     * @param int $count Number of items left out
+     */
+    protected function notShownNote(int $count): string
+    {
+        return '*' . sprintf(I18n::n('… %d more item not shown', '… %d more items not shown', $count), $count) . "*\n\n";
     }
 
     /**

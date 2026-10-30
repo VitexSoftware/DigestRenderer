@@ -66,7 +66,7 @@ class DebtorsRenderer extends AbstractModuleRenderer
         }
 
         if (isset($data['top_debtors'])) {
-            $md .= $this->renderTopDebtors($data['top_debtors']);
+            $md .= $this->renderTopDebtors($data['top_debtors'], (int) ($data['top_total'] ?? 0));
         }
 
         return $this->markdownSection($title, $md);
@@ -76,10 +76,18 @@ class DebtorsRenderer extends AbstractModuleRenderer
      * Render top debtors table
      *
      * @param array<int, array<string, mixed>> $topDebtors Top debtors data
+     * @param int                              $total      Number of all debtors
      * @return string Markdown table
      */
-    private function renderTopDebtors(array $topDebtors): string
+    private function renderTopDebtors(array $topDebtors, int $total = 0): string
     {
+        if ($this->itemLimit > 0) {
+            $topDebtors = \array_slice($topDebtors, 0, $this->itemLimit, true);
+        }
+
+        $shown = \count($topDebtors);
+        $total = max($total, $shown);
+
         if (empty($topDebtors)) {
             return $this->markdownHeading(I18n::t('Top debtors'), 4) . I18n::t('No debtors data available') . "\n\n";
         }
@@ -117,6 +125,8 @@ class DebtorsRenderer extends AbstractModuleRenderer
             $rows[] = $row;
         }
 
-        return $this->markdownHeading(I18n::t('Top debtors'), 4) . $this->markdownItemsTable($headers, $rows);
+        return $this->markdownHeading($this->limitedTitle(I18n::t('Top debtors'), $shown, $total), 4)
+            . $this->markdownTable($headers, $rows)
+            . ($total > $shown ? $this->notShownNote($total - $shown) : '');
     }
 }
