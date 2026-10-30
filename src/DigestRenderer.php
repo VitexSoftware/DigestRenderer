@@ -18,13 +18,17 @@ namespace VitexSoftware\DigestRenderer;
 use VitexSoftware\DigestRenderer\Converters\MarkdownConverter;
 use VitexSoftware\DigestRenderer\Converters\PdfConverter;
 use VitexSoftware\DigestRenderer\Renderers\ModuleRendererFactory;
+use VitexSoftware\DigestRenderer\Themes\AmberSunsetTheme;
 use VitexSoftware\DigestRenderer\Themes\BootstrapTheme;
+use VitexSoftware\DigestRenderer\Themes\CrimsonLedgerTheme;
 use VitexSoftware\DigestRenderer\Themes\EmailTheme;
+use VitexSoftware\DigestRenderer\Themes\GraphiteTheme;
 use VitexSoftware\DigestRenderer\Themes\GreenTheme;
 use VitexSoftware\DigestRenderer\Themes\NordicBlueTheme;
+use VitexSoftware\DigestRenderer\Themes\OceanTealTheme;
 use VitexSoftware\DigestRenderer\Themes\RainbowTheme;
-use VitexSoftware\DigestRenderer\Themes\VioletGardenTheme;
 use VitexSoftware\DigestRenderer\Themes\ThemeInterface;
+use VitexSoftware\DigestRenderer\Themes\VioletGardenTheme;
 
 /**
  * Main digest renderer
@@ -92,7 +96,7 @@ class DigestRenderer
     /**
      * Set theme by name
      *
-     * @param string $themeName Theme name (bootstrap, email)
+     * @param string $themeName Theme name (bootstrap, email, green, …)
      * @return self
      */
     public function setTheme(string $themeName): self
@@ -103,11 +107,36 @@ class DigestRenderer
             'rainbow' => new RainbowTheme(),
             'nordic-blue', 'nordic' => new NordicBlueTheme(),
             'violet-garden', 'violet' => new VioletGardenTheme(),
+            'amber-sunset', 'amber' => new AmberSunsetTheme(),
+            'ocean-teal', 'teal' => new OceanTealTheme(),
+            'graphite', 'slate' => new GraphiteTheme(),
+            'crimson-ledger', 'crimson' => new CrimsonLedgerTheme(),
             'bootstrap', 'default', 'happy' => new BootstrapTheme(),
             default => throw new \InvalidArgumentException("Unknown theme: $themeName"),
         };
 
         return $this;
+    }
+
+    /**
+     * Theme ids offered in MultiFlexi / CLI configuration forms.
+     *
+     * @return array<string, string> id => label
+     */
+    public static function availableThemes(): array
+    {
+        return [
+            'bootstrap' => 'Bootstrap',
+            'email' => 'Email',
+            'green' => 'Green',
+            'rainbow' => 'Rainbow',
+            'nordic-blue' => 'Nordic Blue',
+            'violet-garden' => 'Violet Garden',
+            'amber-sunset' => 'Amber Sunset',
+            'ocean-teal' => 'Ocean Teal',
+            'graphite' => 'Graphite',
+            'crimson-ledger' => 'Crimson Ledger',
+        ];
     }
 
     /**

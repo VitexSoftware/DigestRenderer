@@ -35,7 +35,7 @@ $digestData = json_decode(file_get_contents('digest_data.json'), true);
 $renderer = new DigestRenderer();
 
 // Configure theme (optional)
-$renderer->setTheme('bootstrap'); // or 'email', 'print'
+$renderer->setTheme('bootstrap'); // see DigestRenderer::availableThemes()
 
 // Render HTML
 $html = $renderer->render($digestData);
@@ -51,22 +51,21 @@ $emailHtml = $emailRenderer->render($digestData);
 
 ## Themes
 
-### Bootstrap Theme (Default)
-- Responsive design
-- Modern Bootstrap 5 components
-- Interactive elements
-- Chart.js integration
+Ten built-in themes (select via `setTheme()` / MultiFlexi `THEME`):
 
-### Email Theme
-- Email client compatibility
-- Inline CSS styles
-- Table-based layouts
-- Outlook compatibility
+| Id | Label |
+|----|-------|
+| `bootstrap` | Bootstrap (default) |
+| `email` | Email |
+| `green` | Green |
+| `rainbow` | Rainbow |
+| `nordic-blue` | Nordic Blue |
+| `violet-garden` | Violet Garden |
+| `amber-sunset` | Amber Sunset |
+| `ocean-teal` | Ocean Teal |
+| `graphite` | Graphite |
+| `crimson-ledger` | Crimson Ledger |
 
-### Print Theme
-- Print-optimized styling
-- Page break handling
-- Monochrome-friendly colors
 
 ## Module Renderers
 

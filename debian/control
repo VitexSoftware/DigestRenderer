@@ -19,9 +19,9 @@ Description: HTML rendering library for digest modules
  for generating beautiful reports from accounting system data.
  .
  Features:
-  * Theme-based rendering system
-  * Bootstrap theme for modern web interfaces
-  * Email theme for notification systems
+  * Theme-based rendering system with 10 built-in color themes
+  * Bootstrap, Email, Green, Rainbow, Nordic Blue, Violet Garden,
+    Amber Sunset, Ocean Teal, Graphite and Crimson Ledger themes
   * Module-specific renderers
   * Responsive HTML output
   * Easy theme customization
