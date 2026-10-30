@@ -1,3 +1,11 @@
+php-vitexsoftware-digest-renderer (1.2.0) unstable; urgency=medium
+
+  * Truncated lists are announced: heading "Top debtors (first 20)" and a closing
+    note "... 35 more not shown" (Czech translations included)
+  * Fix wording: "Outcoming invoices" is now "Outgoing invoices"
+
+ -- Vítězslav Dvořák <info@vitexsoftware.cz>  Fri, 30 Oct 2026 14:12:41 +0100
+
 php-vitexsoftware-digest-renderer (1.1.0) unstable; urgency=medium
 
   * Item limit: DigestRenderer::setItemLimit() caps the number of listed
