@@ -10,7 +10,7 @@ Package: php-vitexsoftware-digest-renderer
 Architecture: all
 Depends: ${misc:Depends},
          php-cli,
-         php-vitexsoftware-digest-modules (>= 1.0),
+         php-vitexsoftware-digest-modules (>= 1.3.0),
          php-dompdf-dompdf,
          php-league-commonmark
 Description: HTML rendering library for digest modules

@@ -92,7 +92,7 @@ class DebtorsRenderer extends AbstractModuleRenderer
             return $this->markdownHeading(I18n::t('Top debtors'), 4) . I18n::t('No debtors data available') . "\n\n";
         }
 
-        $headers = [I18n::t('Company'), I18n::t('Invoices count'), I18n::t('Max overdue days')];
+        $headers = [I18n::t('Company'), I18n::t('Email'), I18n::t('Phone'), I18n::t('Invoices count'), I18n::t('Max overdue days')];
 
         $allCurrencies = [];
 
@@ -113,6 +113,8 @@ class DebtorsRenderer extends AbstractModuleRenderer
         foreach ($topDebtors as $debtor) {
             $row = [
                 $debtor['company'] ?? I18n::t('Unknown'),
+                ($debtor['email'] ?? '') !== '' ? (string) $debtor['email'] : '-',
+                ($debtor['phone'] ?? '') !== '' ? (string) $debtor['phone'] : '-',
                 (string) ($debtor['invoices_count'] ?? 0),
                 (string) ($debtor['overdue_days_max'] ?? 0),
             ];
