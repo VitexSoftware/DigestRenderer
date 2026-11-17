@@ -113,8 +113,8 @@ class DebtorsRenderer extends AbstractModuleRenderer
         foreach ($topDebtors as $debtor) {
             $row = [
                 $debtor['company'] ?? I18n::t('Unknown'),
-                ($debtor['email'] ?? '') !== '' ? (string) $debtor['email'] : '-',
-                ($debtor['phone'] ?? '') !== '' ? (string) $debtor['phone'] : '-',
+                $this->contactCell($debtor['email'] ?? ''),
+                $this->contactCell($debtor['phone'] ?? ''),
                 (string) ($debtor['invoices_count'] ?? 0),
                 (string) ($debtor['overdue_days_max'] ?? 0),
             ];
@@ -130,5 +130,25 @@ class DebtorsRenderer extends AbstractModuleRenderer
         return $this->markdownHeading($this->limitedTitle(I18n::t('Top debtors'), $shown, $total), 4)
             . $this->markdownTable($headers, $rows)
             . ($total > $shown ? $this->notShownNote($total - $shown) : '');
+    }
+
+    /**
+     * Make an untrusted contact value safe for a Markdown table cell.
+     *
+     * Contact data comes from ERP records and ends up in HTML output, so line
+     * breaks are flattened and HTML and Markdown special characters are neutralised.
+     */
+    private function contactCell(mixed $value): string
+    {
+        $text = trim((string) preg_replace('/\s+/', ' ', (string) $value));
+
+        if ($text === '') {
+            return '-';
+        }
+
+        $html = htmlspecialchars($text, \ENT_QUOTES | \ENT_HTML5, 'UTF-8');
+
+        // Neutralise Markdown syntax (links, images, emphasis, code) as well.
+        return (string) preg_replace('/([\\\\`*_\\[\\]()!|~#])/', '\\\\$1', $html);
     }
 }
